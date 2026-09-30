@@ -329,7 +329,7 @@ kpis(pg, [("EV Charge Points", "EV Charge Points YoY %", None, "EV Charge Points
           ("Scope 1+2 vs 2020", "Scope 1+2 Mt", "Scope 1+2", "Neutral Colour", "Scope 1+2 vs 2020 Colour")])
 ev = chart(pg, "lineClusteredColumnComboChart", *inner((TWO[0][0], ROW2_Y, TWO[0][1], ROW2_H)), "dim_date.month_start", ["[EV Sessions]"],
            y2=["[Energy Delivered MWh]"], labels=False, value_axis=True, sort="cat",
-           colours={"[EV Sessions]": YEL, "[Energy Delivered MWh]": GREEN})
+           colours={"[EV Sessions]": RED, "[Energy Delivered MWh]": GREEN})
 em = chart(pg, "lineChart", *inner((TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H)), "dim_date.year", ["[Scope 1+2 Mt]", "[Scope 1+2 Target Mt]"],
            categorical=True, sort="cat", colours={"[Scope 1+2 Mt]": RED, "[Scope 1+2 Target Mt]": LGREY}, hide_labels=["[Scope 1+2 Target Mt]"],
            extra={"lineStyles": [{"properties": {"lineStyle": lit("'dashed'")}, "selector": {"metadata": "_Measures.Scope 1+2 Target Mt"}}]})
@@ -352,12 +352,12 @@ table(pg, *inner((TWO[0][0], ROW2_Y, TWO[0][1], ROW2_H)),
       ["vw_pipeline_runs.object_name", "vw_pipeline_runs.rows_read", "vw_pipeline_runs.rows_inserted", "vw_pipeline_runs.rows_updated",
        "vw_pipeline_runs.rows_rejected", "vw_pipeline_runs.duration_seconds"],
       ["Silver table", "Rows read", "Inserted", "Updated", "Rejected", "Seconds"], latest_entity="vw_pipeline_runs",
-      where=[("vw_pipeline_runs", "step", "'silver'")], font=12)
+      where=[("vw_pipeline_runs", "step", "'silver'")], font=10)
 chart(pg, "clusteredBarChart", *inner((TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H)), "vw_rejections.reject_reason", ["[Rejected Rows (latest)]"],
       series="vw_rejections.table_name", sort="desc", labels=False, value_axis=True)
 table(pg, *inner((THREE[2][0], ROW3_Y, THREE[2][1], ROW3_H)),
       ["vw_dq_results.result", "vw_dq_results.check_name", "vw_dq_results.table_name", "vw_dq_results.actual_value"],
-      ["Result", "Check", "Table", "Actual"], latest_entity="vw_dq_results", font=10)
+      ["Result", "Check", "Table", "Actual"], latest_entity="vw_dq_results", font=9)
 
 # ------------------------------------------------------------------ write
 shutil.rmtree(OUT, ignore_errors=True)

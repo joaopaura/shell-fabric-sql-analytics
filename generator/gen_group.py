@@ -134,7 +134,7 @@ def main():
     for y in YEARS:
         tg += [(y, "Production", "kboe/d", round(plan[y], 1)),
                (y, "Scope 1+2 emissions", "MtCO2e", round(base_s12 * (1 - 0.5 * (y - 2016) / 14), 2)),
-               (y, "Fuel volume", "ML", round(fuel[2020] / 0.87 * 0.985 ** (y - 2020), 1)),
+               (y, "Fuel volume", "ML", round(fuel[y] * r.uniform(0.97, 1.03), 1)),
                (y, "EV charge points", "points", int(250 * 1.42 ** (y - 2020))),
                (y, "Low-carbon revenue share", "%", round(lc[y] * r.uniform(0.97, 1.12), 2))]
     tg += [(2030, "Scope 1+2 emissions", "MtCO2e", round(base_s12 * 0.5, 2)),
