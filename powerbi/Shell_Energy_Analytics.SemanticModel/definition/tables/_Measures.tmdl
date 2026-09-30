@@ -24,7 +24,7 @@ table _Measures
 		lineageTag: 8b18e68d-6f0e-5784-abce-69e50156467a
 
 	/// Group revenue, USD.
-	measure 'Revenue' = SUM ( fact_financials[revenue_usd] )
+	measure Revenue = SUM ( fact_financials[revenue_usd] )
 		formatString: $#,0
 		displayFolder: 01 Overview
 		lineageTag: 2cb51867-8a11-5498-bfbb-34237310842b
@@ -53,7 +53,7 @@ table _Measures
 		lineageTag: 4a1a0306-542b-57bb-8395-80bdce648e35
 
 	/// EBITDA recalculated in silver as revenue minus operating cost.
-	measure 'EBITDA' = SUM ( fact_financials[ebitda_usd] )
+	measure EBITDA = SUM ( fact_financials[ebitda_usd] )
 		formatString: $#,0
 		displayFolder: 01 Overview
 		lineageTag: 745c0077-f399-5084-972c-5dddd7eafef3
@@ -105,7 +105,7 @@ table _Measures
 		lineageTag: 7845e53d-71f9-51b1-a29f-9651cb20f428
 
 	/// Capital expenditure, USD.
-	measure 'Capex' = SUM ( fact_financials[capex_usd] )
+	measure Capex = SUM ( fact_financials[capex_usd] )
 		formatString: $#,0
 		displayFolder: 01 Overview
 		lineageTag: aa91feaa-be4b-5e5b-8876-33aa798656ce
@@ -702,12 +702,12 @@ table _Measures
 		lineageTag: 17544db4-9dcf-50f7-a218-fdf8434b178a
 
 	/// Actual with unit.
-	measure 'Actual' = VAR m = SELECTEDVALUE ( fact_targets[metric] ) VAR v = [Actual Value] RETURN SWITCH ( m, "Production", FORMAT ( v, "#,0" ) & " kboe/d", "Scope 1+2 emissions", FORMAT ( v, "0.0" ) & " Mt", "Fuel volume", FORMAT ( v, "#,0" ) & " ML", "EV charge points", FORMAT ( v, "#,0" ), "Low-carbon revenue share", FORMAT ( v, "0.0" ) & "%" )
+	measure Actual = VAR m = SELECTEDVALUE ( fact_targets[metric] ) VAR v = [Actual Value] RETURN SWITCH ( m, "Production", FORMAT ( v, "#,0" ) & " kboe/d", "Scope 1+2 emissions", FORMAT ( v, "0.0" ) & " Mt", "Fuel volume", FORMAT ( v, "#,0" ) & " ML", "EV charge points", FORMAT ( v, "#,0" ), "Low-carbon revenue share", FORMAT ( v, "0.0" ) & "%" )
 		displayFolder: 05 Targets
 		lineageTag: b5aed92b-3a80-551b-916e-faf407b1b3f1
 
 	/// Target with unit.
-	measure 'Target' = VAR m = SELECTEDVALUE ( fact_targets[metric] ) VAR v = [Target Value] RETURN SWITCH ( m, "Production", FORMAT ( v, "#,0" ) & " kboe/d", "Scope 1+2 emissions", FORMAT ( v, "0.0" ) & " Mt", "Fuel volume", FORMAT ( v, "#,0" ) & " ML", "EV charge points", FORMAT ( v, "#,0" ), "Low-carbon revenue share", FORMAT ( v, "0.0" ) & "%" )
+	measure Target = VAR m = SELECTEDVALUE ( fact_targets[metric] ) VAR v = [Target Value] RETURN SWITCH ( m, "Production", FORMAT ( v, "#,0" ) & " kboe/d", "Scope 1+2 emissions", FORMAT ( v, "0.0" ) & " Mt", "Fuel volume", FORMAT ( v, "#,0" ) & " ML", "EV charge points", FORMAT ( v, "#,0" ), "Low-carbon revenue share", FORMAT ( v, "0.0" ) & "%" )
 		displayFolder: 05 Targets
 		lineageTag: dace064e-8873-59e0-90cb-64aa37fdc1b0
 
