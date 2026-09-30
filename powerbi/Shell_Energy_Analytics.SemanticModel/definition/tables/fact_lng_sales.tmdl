@@ -1,0 +1,70 @@
+table fact_lng_sales
+	lineageTag: 5faaf36d-1fc0-4897-8b8b-fd4ac29c0b45
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3f3f199d-5c43-4a72-8af3-be9e4eb686bd
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column plant_asset_id
+		dataType: string
+		isHidden
+		lineageTag: b468cef1-383f-4ba7-9742-f6f86fcd91b6
+		summarizeBy: none
+		sourceColumn: plant_asset_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column destination_country_code
+		dataType: string
+		isHidden
+		lineageTag: 64b6554b-1cfe-4ca1-905f-e4cb9c334905
+		summarizeBy: none
+		sourceColumn: destination_country_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column contract_type
+		dataType: string
+		lineageTag: 1320e9b4-aa66-4c91-918d-b7c8e320f1f1
+		summarizeBy: none
+		sourceColumn: contract_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column volume_mt
+		dataType: double
+		lineageTag: 79919bd6-6000-4e73-a340-0e99aac4d225
+		summarizeBy: sum
+		sourceColumn: volume_mt
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column revenue_usd
+		dataType: double
+		lineageTag: 9464bcca-fe72-4612-ae67-87ad1cbf21d7
+		summarizeBy: sum
+		sourceColumn: revenue_usd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fact_lng_sales = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "fact_lng_sales"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

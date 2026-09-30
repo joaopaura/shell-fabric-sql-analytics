@@ -1,0 +1,52 @@
+{
+  "name": "Shell Energy Analytics",
+  "dataColors": ["#DD1D21", "#FBCE07", "#5E5E59", "#1E8E5A", "#0097A9", "#EB8705", "#B9B7B0", "#7A1315"],
+  "background": "#FFFFFF",
+  "foreground": "#1D1D1B",
+  "tableAccent": "#DD1D21",
+  "good": "#1E8E5A",
+  "neutral": "#EB8705",
+  "bad": "#DD1D21",
+  "maximum": "#DD1D21",
+  "center": "#FBCE07",
+  "minimum": "#FFF5CC",
+  "textClasses": {
+    "callout": { "fontSize": 28, "fontFace": "Segoe UI Semibold", "color": "#1D1D1B" },
+    "title": { "fontSize": 14, "fontFace": "Segoe UI Semibold", "color": "#1D1D1B" },
+    "header": { "fontSize": 12, "fontFace": "Segoe UI Semibold", "color": "#1D1D1B" },
+    "label": { "fontSize": 10, "fontFace": "Segoe UI", "color": "#5E5E59" }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [{ "show": false }],
+        "title": [{ "show": false }],
+        "border": [{ "show": false }],
+        "dropShadow": [{ "show": false }],
+        "categoryAxis": [{ "labelColor": { "solid": { "color": "#5E5E59" } }, "fontSize": 10, "showAxisTitle": false, "gridlineShow": false }],
+        "valueAxis": [{ "labelColor": { "solid": { "color": "#5E5E59" } }, "fontSize": 10, "showAxisTitle": false, "gridlineColor": { "solid": { "color": "#E5E3DD" } }, "gridlineStyle": "dotted" }],
+        "legend": [{ "labelColor": { "solid": { "color": "#5E5E59" } }, "fontSize": 10, "position": "Top" }],
+        "labels": [{ "color": { "solid": { "color": "#1D1D1B" } }, "fontSize": 10 }]
+      }
+    },
+    "page": {
+      "*": {
+        "outspace": [{ "color": { "solid": { "color": "#F7F7F5" } } }],
+        "background": [{ "transparency": 0 }]
+      }
+    },
+    "slicer": {
+      "*": {
+        "header": [{ "show": false }],
+        "items": [{ "fontColor": { "solid": { "color": "#1D1D1B" } }, "fontSize": 11 }]
+      }
+    },
+    "tableEx": {
+      "*": {
+        "columnHeaders": [{ "fontColor": { "solid": { "color": "#5E5E59" } }, "backColor": { "solid": { "color": "#FFFFFF" } }, "fontSize": 10 }],
+        "values": [{ "fontColorPrimary": { "solid": { "color": "#1D1D1B" } }, "backColorPrimary": { "solid": { "color": "#FFFFFF" } }, "backColorSecondary": { "solid": { "color": "#FAFAF8" } }, "fontSize": 10 }],
+        "grid": [{ "gridHorizontal": true, "gridHorizontalColor": { "solid": { "color": "#E5E3DD" } }, "gridVertical": false }]
+      }
+    }
+  }
+}

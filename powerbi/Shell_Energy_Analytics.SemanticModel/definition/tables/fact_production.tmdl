@@ -1,0 +1,98 @@
+table fact_production
+	lineageTag: 44f9be40-9ea1-4e75-866a-c2bd05b2a9ea
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 091d6062-a84c-470f-aece-d39406342221
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column asset_id
+		dataType: string
+		isHidden
+		lineageTag: 742b4cac-6487-4f62-959f-c6ebef2dec39
+		summarizeBy: none
+		sourceColumn: asset_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column oil_bbl
+		dataType: int64
+		formatString: 0
+		lineageTag: f33af6a0-a42d-4f73-9e69-06a19c67e2ce
+		summarizeBy: sum
+		sourceColumn: oil_bbl
+
+		annotation SummarizationSetBy = Automatic
+
+	column gas_boe
+		dataType: int64
+		formatString: 0
+		lineageTag: 3cfd43c1-a335-440d-b61f-08b1013618d1
+		summarizeBy: sum
+		sourceColumn: gas_boe
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_boe
+		dataType: int64
+		formatString: 0
+		lineageTag: 898ca3ff-3303-407e-abc5-7a86a4e145be
+		summarizeBy: sum
+		sourceColumn: total_boe
+
+		annotation SummarizationSetBy = Automatic
+
+	column planned_boe
+		dataType: int64
+		formatString: 0
+		lineageTag: c79874b1-508a-4ff0-892c-c024ba4e67e5
+		summarizeBy: sum
+		sourceColumn: planned_boe
+
+		annotation SummarizationSetBy = Automatic
+
+	column opex_usd
+		dataType: double
+		lineageTag: 3bbf56e7-562a-4fe5-be6e-0f49d8ec310f
+		summarizeBy: sum
+		sourceColumn: opex_usd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column days_in_month
+		dataType: int64
+		formatString: 0
+		lineageTag: 687b6ee0-84d6-420c-89e4-6f017dcf213a
+		summarizeBy: sum
+		sourceColumn: days_in_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column downtime_hours
+		dataType: double
+		lineageTag: 917e3d05-06f0-428e-86e7-8673681e38b8
+		summarizeBy: sum
+		sourceColumn: downtime_hours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fact_production = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "fact_production"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

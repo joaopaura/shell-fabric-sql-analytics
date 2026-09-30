@@ -1,0 +1,49 @@
+table fact_targets
+	lineageTag: 75052be9-37cd-425d-b755-f81a662b78bf
+
+	column target_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 54513c93-0321-4904-83fb-4357f5c27847
+		summarizeBy: sum
+		sourceColumn: target_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column metric
+		dataType: string
+		lineageTag: beab0175-5e9e-4ff0-b855-5b8bc1b86f62
+		summarizeBy: none
+		sourceColumn: metric
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit
+		dataType: string
+		lineageTag: b345eb28-e83c-4ad0-950e-c066f312cb74
+		summarizeBy: none
+		sourceColumn: unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column target_value
+		dataType: double
+		lineageTag: 8342d31a-16f2-40e7-ad93-20fc0e04e639
+		summarizeBy: sum
+		sourceColumn: target_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fact_targets = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "fact_targets"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

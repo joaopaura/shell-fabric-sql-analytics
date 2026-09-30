@@ -1,0 +1,92 @@
+table fact_financials
+	lineageTag: 38456711-29b5-48aa-8103-8c21cf80dde4
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0daf4d9e-cf25-4ac8-b2ba-8d904c86aa15
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: bc047d14-ff7a-441b-8e6b-46c00eadd497
+		summarizeBy: none
+		sourceColumn: segment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column country_code
+		dataType: string
+		isHidden
+		lineageTag: 5096d784-3c56-45b9-8df4-961b647e54ac
+		summarizeBy: none
+		sourceColumn: country_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue_usd
+		dataType: double
+		lineageTag: dfb8e1d0-efcb-4f40-b910-2056969821e9
+		summarizeBy: sum
+		sourceColumn: revenue_usd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column operating_cost_usd
+		dataType: double
+		lineageTag: dea02b83-a2b5-4131-818f-7719feda41ad
+		summarizeBy: sum
+		sourceColumn: operating_cost_usd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ebitda_usd
+		dataType: double
+		lineageTag: 7d83abd5-f4ea-492c-b9c2-c612274bd4de
+		summarizeBy: sum
+		sourceColumn: ebitda_usd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column capex_usd
+		dataType: double
+		lineageTag: d9eb3d54-9b72-4fa8-9ba2-88c15456af7a
+		summarizeBy: sum
+		sourceColumn: capex_usd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column is_ebitda_mismatch
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 36e5782a-bec3-4d9a-a7b2-b0a27945eaa7
+		summarizeBy: none
+		sourceColumn: is_ebitda_mismatch
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_financials = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "fact_financials"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

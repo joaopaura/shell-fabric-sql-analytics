@@ -1,0 +1,55 @@
+table vw_rejections
+	lineageTag: 49be6c46-e1a0-447a-8b5c-a8e47b85588b
+
+	column pipeline_run_id
+		dataType: string
+		lineageTag: 1b7c89f6-6938-4565-8426-7150e2b740c7
+		summarizeBy: none
+		sourceColumn: pipeline_run_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column table_name
+		dataType: string
+		lineageTag: 98ef4b15-00fc-45f4-a8da-1f07ea13c301
+		summarizeBy: none
+		sourceColumn: table_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column reject_reason
+		dataType: string
+		lineageTag: 39297dbf-0b43-47cd-831b-7790992164d4
+		summarizeBy: none
+		sourceColumn: reject_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column rejected_rows
+		dataType: int64
+		formatString: 0
+		lineageTag: f268de44-55ec-4cfd-99e2-cf499f010e8c
+		summarizeBy: sum
+		sourceColumn: rejected_rows
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_latest_run = VAR t = FILTER ( ALL ( vw_pipeline_runs[step], vw_pipeline_runs[started_at], vw_pipeline_runs[pipeline_run_id] ), vw_pipeline_runs[step] = "dq" ) VAR lastRun = CONCATENATEX ( TOPN ( 1, t, vw_pipeline_runs[started_at], DESC ), vw_pipeline_runs[pipeline_run_id] ) RETURN vw_rejections[pipeline_run_id] = lastRun
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c5a8dab3-7398-46af-a27b-16329086d586
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition vw_rejections = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "vw_rejections"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

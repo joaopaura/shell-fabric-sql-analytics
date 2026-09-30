@@ -1,0 +1,36 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["dim_asset","dim_country","dim_date","dim_product","dim_segment","dim_site","fact_emissions","fact_ev_charging","fact_financials","fact_lng_sales","fact_production","fact_retail_sales","fact_targets","vw_dq_results","vw_pipeline_runs","vw_rejections","fact_asset_downtime","_Measures"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dim_asset
+ref table dim_country
+ref table dim_date
+ref table dim_product
+ref table dim_segment
+ref table dim_site
+ref table fact_emissions
+ref table fact_ev_charging
+ref table fact_financials
+ref table fact_lng_sales
+ref table fact_production
+ref table fact_retail_sales
+ref table fact_targets
+ref table vw_dq_results
+ref table vw_pipeline_runs
+ref table vw_rejections
+ref table fact_asset_downtime
+ref table _Measures
+
+ref cultureInfo en-US
+

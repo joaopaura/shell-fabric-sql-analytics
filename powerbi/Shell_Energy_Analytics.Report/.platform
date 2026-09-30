@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Shell_Energy_Analytics"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ad210620-0701-46a0-9591-d5abdb1d43e2"
+  }
+}

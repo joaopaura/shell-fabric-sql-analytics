@@ -1,0 +1,56 @@
+table dim_country
+	lineageTag: 88266543-8af2-41dc-ba1e-26ae984e878f
+
+	column country_code
+		dataType: string
+		lineageTag: b54e6b8a-a260-4ef5-a8c0-3c5525559e74
+		summarizeBy: none
+		sourceColumn: country_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column country_name
+		dataType: string
+		lineageTag: 6b94a567-4f37-453c-850b-5dec99b78e92
+		summarizeBy: none
+		sourceColumn: country_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: 0a5c374a-81e9-41dd-93d1-c1c03096cc9c
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_mobility
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 1384f3d3-4280-4746-915d-e7e8933f7f54
+		summarizeBy: none
+		sourceColumn: has_mobility
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_upstream
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: dde71d30-e704-4c61-bd00-30ba17eba85e
+		summarizeBy: none
+		sourceColumn: has_upstream
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_country = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "dim_country"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,154 @@
+table vw_pipeline_runs
+	lineageTag: df0c82c0-1f05-401b-bd83-c44f0cfe97ba
+
+	column run_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 03d9575f-43d6-40bd-aff8-327f5d823722
+		summarizeBy: sum
+		sourceColumn: run_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column pipeline_run_id
+		dataType: string
+		lineageTag: bf27c71c-160e-4b23-ac29-ac30e40f1552
+		summarizeBy: none
+		sourceColumn: pipeline_run_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column step
+		dataType: string
+		lineageTag: e067e19a-f69c-4e80-ad1c-f17e9ad045cc
+		summarizeBy: none
+		sourceColumn: step
+
+		annotation SummarizationSetBy = Automatic
+
+	column object_name
+		dataType: string
+		lineageTag: 662ab6ce-2b6f-4d1a-8757-8a081b5a4205
+		summarizeBy: none
+		sourceColumn: object_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: aae4c9fa-f763-469c-918e-9dda344cd43b
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column started_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e0ab7c5f-a879-47d2-8cd9-ee76fc0d5503
+		summarizeBy: none
+		sourceColumn: started_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column ended_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f20c66b7-7de7-41bf-adb0-e6028720f5ab
+		summarizeBy: none
+		sourceColumn: ended_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column duration_seconds
+		dataType: int64
+		formatString: 0
+		lineageTag: d0b0044b-e43d-456c-9c3b-2d7a42e0caaa
+		summarizeBy: sum
+		sourceColumn: duration_seconds
+
+		annotation SummarizationSetBy = Automatic
+
+	column run_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8e06cf6b-5d53-450d-b0fb-06fe19680b9f
+		summarizeBy: none
+		sourceColumn: run_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column rows_read
+		dataType: int64
+		formatString: 0
+		lineageTag: 97e8b141-6126-49e3-9fc7-15f172e03883
+		summarizeBy: sum
+		sourceColumn: rows_read
+
+		annotation SummarizationSetBy = Automatic
+
+	column rows_inserted
+		dataType: int64
+		formatString: 0
+		lineageTag: bae36a1a-203f-4040-9b04-373d784053d2
+		summarizeBy: sum
+		sourceColumn: rows_inserted
+
+		annotation SummarizationSetBy = Automatic
+
+	column rows_updated
+		dataType: int64
+		formatString: 0
+		lineageTag: 40f6bfeb-435e-49bd-a415-017397128978
+		summarizeBy: sum
+		sourceColumn: rows_updated
+
+		annotation SummarizationSetBy = Automatic
+
+	column rows_rejected
+		dataType: int64
+		formatString: 0
+		lineageTag: 87d899e9-8111-499c-8c9b-d9224e597494
+		summarizeBy: sum
+		sourceColumn: rows_rejected
+
+		annotation SummarizationSetBy = Automatic
+
+	column error_message
+		dataType: string
+		lineageTag: 3871efdf-a7a8-4977-9347-cd5a1098f0c8
+		summarizeBy: none
+		sourceColumn: error_message
+
+		annotation SummarizationSetBy = Automatic
+
+	column step_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 699776e8-1718-4e4e-a0fa-dfb08d1e7dd8
+		summarizeBy: sum
+		sourceColumn: step_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_latest_run = VAR t = FILTER ( ALL ( vw_pipeline_runs[step], vw_pipeline_runs[started_at], vw_pipeline_runs[pipeline_run_id] ), vw_pipeline_runs[step] = "dq" ) VAR lastRun = CONCATENATEX ( TOPN ( 1, t, vw_pipeline_runs[started_at], DESC ), vw_pipeline_runs[pipeline_run_id] ) RETURN vw_pipeline_runs[pipeline_run_id] = lastRun
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 10538576-8f59-4f4b-a683-1e17bed2d15a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition vw_pipeline_runs = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "vw_pipeline_runs"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

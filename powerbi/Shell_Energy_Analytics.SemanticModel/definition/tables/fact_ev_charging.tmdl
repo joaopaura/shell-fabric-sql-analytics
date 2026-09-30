@@ -1,0 +1,72 @@
+table fact_ev_charging
+	lineageTag: c5b09111-34f9-44b7-94d3-a63f0120f932
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c8c7ffdd-c188-4530-917f-7dc50509ecf4
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column site_id
+		dataType: string
+		isHidden
+		lineageTag: f5cca14f-f296-430b-a956-3d8a2864f8d3
+		summarizeBy: none
+		sourceColumn: site_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column sessions
+		dataType: int64
+		formatString: 0
+		lineageTag: d427ef3d-2047-4437-9f38-8d0100b5e461
+		summarizeBy: sum
+		sourceColumn: sessions
+
+		annotation SummarizationSetBy = Automatic
+
+	column energy_mwh
+		dataType: double
+		lineageTag: a1a86d2a-4452-4322-8cc8-06410c9e8a53
+		summarizeBy: sum
+		sourceColumn: energy_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column revenue_usd
+		dataType: double
+		lineageTag: 92749149-49ff-4063-8a2c-077249468606
+		summarizeBy: sum
+		sourceColumn: revenue_usd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column avg_session_minutes
+		dataType: double
+		lineageTag: 593f3cae-c304-4571-be8f-747a0ce7c5f1
+		summarizeBy: sum
+		sourceColumn: avg_session_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fact_ev_charging = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "fact_ev_charging"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

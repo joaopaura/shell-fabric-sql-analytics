@@ -1,0 +1,154 @@
+table dim_date
+	dataCategory: Time
+	lineageTag: 4f488174-8a02-4f81-8962-41eec6ab83b5
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: ae174c15-bc8a-4735-866b-e9193de97884
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column date
+		dataType: dateTime
+		isKey
+		formatString: dd mmm yyyy
+		lineageTag: 83813745-b2bc-4a81-9e31-d733873639d4
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 4d2e3152-ef89-48a9-beaa-4b132957f079
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter_number
+		dataType: int64
+		formatString: 0
+		lineageTag: fba2a21f-a15e-4f05-bbc1-9294a2ff05bd
+		summarizeBy: none
+		sourceColumn: quarter_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter_label
+		dataType: string
+		lineageTag: 54905b9e-e187-46b2-b573-d0b56f99f767
+		summarizeBy: none
+		sourceColumn: quarter_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 8fd58a63-b622-4088-8a14-38a2fc30a942
+		summarizeBy: none
+		sourceColumn: month_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		sortByColumn: month_number
+		lineageTag: e12d6945-bd9d-4b7c-9b1e-ac916a7294b8
+		summarizeBy: none
+		sourceColumn: month_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_short
+		dataType: string
+		sortByColumn: month_number
+		lineageTag: 6ccb3de1-f805-47e5-a5ae-4a0504f5e16f
+		summarizeBy: none
+		sourceColumn: month_short
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_start
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: 393a4b54-7b14-4e4e-99bf-ce2622c5822e
+		summarizeBy: none
+		sourceColumn: month_start
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year_month
+		dataType: int64
+		formatString: 0
+		lineageTag: fc20794f-7dfc-4661-af37-e7e89a188323
+		summarizeBy: none
+		sourceColumn: year_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month_label
+		dataType: string
+		sortByColumn: year_month
+		lineageTag: 607204c7-b183-4620-8569-cfcf4f00725e
+		summarizeBy: none
+		sourceColumn: year_month_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column iso_week
+		dataType: int64
+		formatString: 0
+		lineageTag: c90d6ef8-9846-4cc6-89ed-6d8ea0767c2e
+		summarizeBy: none
+		sourceColumn: iso_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week
+		dataType: int64
+		formatString: 0
+		lineageTag: af428ac7-f9fc-4c3f-9641-5996ef94bfab
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_name
+		dataType: string
+		sortByColumn: day_of_week
+		lineageTag: 02923e3e-3e39-44e4-9b20-5c6a09a0b14d
+		summarizeBy: none
+		sourceColumn: day_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c61f2f6e-6052-487b-b2bc-f0fa506faf2e
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "dim_date"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

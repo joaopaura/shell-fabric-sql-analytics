@@ -1,0 +1,38 @@
+table dim_product
+	lineageTag: b615ccc5-305d-4402-bcd3-6b23d1226890
+
+	column product_id
+		dataType: string
+		lineageTag: af4370aa-4510-4879-8ce6-ec7d04404472
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_name
+		dataType: string
+		lineageTag: 9a568a0c-6692-4a07-83ba-2ade59a1dcb7
+		summarizeBy: none
+		sourceColumn: product_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_group
+		dataType: string
+		lineageTag: ce9aa030-4325-4335-96ac-146449ae5f7d
+		summarizeBy: none
+		sourceColumn: product_group
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_product = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "dim_product"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

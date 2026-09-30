@@ -1,0 +1,100 @@
+table fact_retail_sales
+	lineageTag: 941c4ba9-6e4e-421b-9df0-aba71d35b5a6
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 1df92d87-5517-4af6-a3c5-0992fb5154d3
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column site_id
+		dataType: string
+		isHidden
+		lineageTag: feeab236-a09a-4134-8f1c-452519a6e95e
+		summarizeBy: none
+		sourceColumn: site_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		isHidden
+		lineageTag: 9435f34e-7fae-4e6a-83c4-710f274b794a
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column volume_litres
+		dataType: double
+		lineageTag: 3b50537b-6ead-47da-bf97-18e07224028e
+		summarizeBy: sum
+		sourceColumn: volume_litres
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column revenue_usd
+		dataType: double
+		lineageTag: f7c8a176-590e-4555-9df3-d669eeb855a3
+		summarizeBy: sum
+		sourceColumn: revenue_usd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column cost_usd
+		dataType: double
+		lineageTag: 04fc4458-4983-4ebe-a622-67fa9d892a39
+		summarizeBy: sum
+		sourceColumn: cost_usd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gross_margin_usd
+		dataType: double
+		lineageTag: 362526ee-61a7-4541-8b64-21d874d516a7
+		summarizeBy: sum
+		sourceColumn: gross_margin_usd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column transactions
+		dataType: int64
+		formatString: 0
+		lineageTag: e078a4e6-953d-4625-be8e-d091a02fe772
+		summarizeBy: sum
+		sourceColumn: transactions
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_volume_imputed
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 65f87d93-b45e-49f4-aafa-a3b8fd508845
+		summarizeBy: none
+		sourceColumn: is_volume_imputed
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_retail_sales = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "fact_retail_sales"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

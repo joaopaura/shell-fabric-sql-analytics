@@ -1,0 +1,85 @@
+relationship 7d2533ac-8fc2-4b67-a19e-b532bf42375f
+	fromColumn: fact_retail_sales.date_key
+	toColumn: dim_date.date_key
+
+relationship 1244ec93-cefb-494e-9ad0-8e075594869e
+	fromColumn: fact_retail_sales.site_id
+	toColumn: dim_site.site_id
+
+relationship 8bc80b2c-d065-4a7c-8bdf-3fed75e9db5d
+	fromColumn: fact_retail_sales.product_id
+	toColumn: dim_product.product_id
+
+relationship 88f80561-a639-4b32-a4d9-b57197ee668e
+	fromColumn: fact_ev_charging.date_key
+	toColumn: dim_date.date_key
+
+relationship 411d90c4-ee04-43db-9c64-06d9426a0656
+	fromColumn: fact_ev_charging.site_id
+	toColumn: dim_site.site_id
+
+relationship a691fb88-73ef-41bd-83d9-7d0411a9ba8b
+	fromColumn: fact_production.date_key
+	toColumn: dim_date.date_key
+
+relationship 3eea7b6a-713d-497b-b6a8-52a6299bd16d
+	fromColumn: fact_production.asset_id
+	toColumn: dim_asset.asset_id
+
+relationship d131b78f-7aa9-4017-9872-640565356daf
+	fromColumn: fact_asset_downtime.date_key
+	toColumn: dim_date.date_key
+
+relationship e0995a36-8fec-4d5e-9e1f-cdfeb5d82ff1
+	fromColumn: fact_asset_downtime.asset_id
+	toColumn: dim_asset.asset_id
+
+relationship db0942e2-5d47-424d-8c08-8d5909371a30
+	fromColumn: fact_lng_sales.date_key
+	toColumn: dim_date.date_key
+
+relationship 0bdbc69a-b9ee-4851-a310-e50946e9cd97
+	fromColumn: fact_lng_sales.plant_asset_id
+	toColumn: dim_asset.asset_id
+
+relationship dcf834d9-22e8-456d-a374-222ccb8a4370
+	isActive: false
+	fromColumn: fact_lng_sales.destination_country_code
+	toColumn: dim_country.country_code
+
+relationship 1ca12016-551f-4320-a01e-08a149e21956
+	fromColumn: fact_financials.date_key
+	toColumn: dim_date.date_key
+
+relationship 2a3cb5fa-d5c8-4eec-8b06-244652e11dc5
+	fromColumn: fact_financials.segment_id
+	toColumn: dim_segment.segment_id
+
+relationship 3614fbe7-3d19-49f3-ab3a-44ebbc3f8a01
+	fromColumn: fact_financials.country_code
+	toColumn: dim_country.country_code
+
+relationship 2646fa8f-d00d-4936-b8ac-f93feb38b0a2
+	fromColumn: fact_emissions.date_key
+	toColumn: dim_date.date_key
+
+relationship da6b8841-d0f5-4c40-ad9a-1a0163e8a77e
+	fromColumn: fact_emissions.segment_id
+	toColumn: dim_segment.segment_id
+
+relationship a42bd4d8-1bbf-44e0-904c-d9c487b09dfb
+	fromColumn: fact_emissions.country_code
+	toColumn: dim_country.country_code
+
+relationship 09736fc5-e209-4c42-b87e-6f14ed30b10a
+	fromColumn: dim_site.country_code
+	toColumn: dim_country.country_code
+
+relationship f43863c5-e7d6-492d-b899-9ce84fe52b01
+	fromColumn: dim_asset.country_code
+	toColumn: dim_country.country_code
+
+relationship 7e7b0ef9-0099-496e-becb-d6c581d1ec6c
+	fromColumn: dim_asset.segment_id
+	toColumn: dim_segment.segment_id
+

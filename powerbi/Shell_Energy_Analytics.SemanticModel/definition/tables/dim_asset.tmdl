@@ -1,0 +1,92 @@
+table dim_asset
+	lineageTag: 1220001f-5372-4897-b3c0-9c473d8c323a
+
+	column asset_id
+		dataType: string
+		lineageTag: 40fca370-157f-43bb-9887-a3e84a42ec2e
+		summarizeBy: none
+		sourceColumn: asset_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column asset_name
+		dataType: string
+		lineageTag: 282f4486-e87c-4730-a4ac-075b1e16cb77
+		summarizeBy: none
+		sourceColumn: asset_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column asset_type
+		dataType: string
+		lineageTag: f4eddfa8-9de2-4a4d-8ac9-d71d3e984320
+		summarizeBy: none
+		sourceColumn: asset_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column country_code
+		dataType: string
+		lineageTag: b7495400-116d-4e1d-b835-2992227d2d01
+		summarizeBy: none
+		sourceColumn: country_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 9be06156-87f7-43e7-bc48-a0365c93728e
+		summarizeBy: none
+		sourceColumn: segment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 5f2f8b57-8443-454e-bf2d-83e6a28a1293
+		summarizeBy: none
+		sourceColumn: start_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column capacity_value
+		dataType: double
+		lineageTag: 60e2fb78-2799-4fe1-bf72-be12983944ba
+		summarizeBy: none
+		sourceColumn: capacity_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column capacity_unit
+		dataType: string
+		lineageTag: a47cad31-9c3c-4aab-8e6a-0152cfa82ff0
+		summarizeBy: none
+		sourceColumn: capacity_unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column capacity_label
+		dataType: string
+		lineageTag: b2218e9a-3f0f-4c87-ac97-ea10737d135e
+		summarizeBy: none
+		sourceColumn: capacity_label
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_asset = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "dim_asset"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

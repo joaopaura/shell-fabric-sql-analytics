@@ -1,0 +1,88 @@
+table vw_dq_results
+	lineageTag: 716f06a0-f7b5-4b6e-a8c6-c5e7a958f7ce
+
+	column pipeline_run_id
+		dataType: string
+		lineageTag: e9f9a468-20f4-4622-9ab6-62afd153b84c
+		summarizeBy: none
+		sourceColumn: pipeline_run_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column check_name
+		dataType: string
+		lineageTag: d65e5eda-fa08-4071-924e-8d89c9f13766
+		summarizeBy: none
+		sourceColumn: check_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column table_name
+		dataType: string
+		lineageTag: 0b12ad65-f62b-4deb-a116-d5190d7e8f01
+		summarizeBy: none
+		sourceColumn: table_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_value
+		dataType: string
+		lineageTag: 2e3a9d5a-2eb5-492e-843a-856be2b8bbb8
+		summarizeBy: none
+		sourceColumn: expected_value
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_value
+		dataType: string
+		lineageTag: cd543fcd-d040-4f19-b0cd-08acf43b6857
+		summarizeBy: none
+		sourceColumn: actual_value
+
+		annotation SummarizationSetBy = Automatic
+
+	column passed
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 8de3f74d-6ae4-4523-a373-ee51515a3634
+		summarizeBy: none
+		sourceColumn: passed
+
+		annotation SummarizationSetBy = Automatic
+
+	column result
+		dataType: string
+		lineageTag: 3a28aa15-3e24-4986-b642-3399de015e7e
+		summarizeBy: none
+		sourceColumn: result
+
+		annotation SummarizationSetBy = Automatic
+
+	column checked_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 465d0a83-a2b6-4293-a16e-821044c65ae0
+		summarizeBy: none
+		sourceColumn: checked_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_latest_run = VAR t = FILTER ( ALL ( vw_pipeline_runs[step], vw_pipeline_runs[started_at], vw_pipeline_runs[pipeline_run_id] ), vw_pipeline_runs[step] = "dq" ) VAR lastRun = CONCATENATEX ( TOPN ( 1, t, vw_pipeline_runs[started_at], DESC ), vw_pipeline_runs[pipeline_run_id] ) RETURN vw_dq_results[pipeline_run_id] = lastRun
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 104405b5-a7c9-4d3d-924d-6a96ccd7dc37
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition vw_dq_results = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "vw_dq_results"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

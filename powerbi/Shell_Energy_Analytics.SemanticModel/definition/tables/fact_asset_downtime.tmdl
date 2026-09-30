@@ -1,0 +1,85 @@
+table fact_asset_downtime
+	lineageTag: 2bef6b3d-0d0e-4726-8598-7986a55d536e
+
+	column event_id
+		dataType: string
+		lineageTag: 1ba453b8-a79b-470f-b335-ad1b5ed2574d
+		summarizeBy: none
+		sourceColumn: event_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 56a647ae-d6f5-427c-9e47-f472c0173981
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column asset_id
+		dataType: string
+		isHidden
+		lineageTag: 66980edd-fb02-4404-93a3-a18245c8ce68
+		summarizeBy: none
+		sourceColumn: asset_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column start_ts
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 015233ad-cf11-4a9e-a5c8-df6ab95a80f1
+		summarizeBy: none
+		sourceColumn: start_ts
+
+		annotation SummarizationSetBy = Automatic
+
+	column end_ts
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 993db26e-8034-4381-ad32-759a9e878a79
+		summarizeBy: none
+		sourceColumn: end_ts
+
+		annotation SummarizationSetBy = Automatic
+
+	column downtime_hours
+		dataType: double
+		formatString: #,0.0
+		lineageTag: 23df9560-1d23-48ac-84c2-5c2cdc911b52
+		summarizeBy: sum
+		sourceColumn: downtime_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column cause
+		dataType: string
+		lineageTag: 2a8eb1cf-3b8d-43db-8705-1927c720c96d
+		summarizeBy: none
+		sourceColumn: cause
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_planned
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 388867ca-f474-45ad-882c-4a21dedd1c72
+		summarizeBy: none
+		sourceColumn: is_planned
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_asset_downtime = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "fact_asset_downtime"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,138 @@
+table dim_site
+	lineageTag: d2c2e6b8-b9c1-47fe-800e-52f6bcf8d9d4
+
+	column site_id
+		dataType: string
+		lineageTag: 84c7f377-ce6b-4532-8e2a-ef5c50f7ac8b
+		summarizeBy: none
+		sourceColumn: site_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column site_name
+		dataType: string
+		lineageTag: d053a493-db53-422a-883b-9f692994a998
+		summarizeBy: none
+		sourceColumn: site_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 9fc6faf6-f4dc-4a6d-837a-72f87eea141d
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column country_code
+		dataType: string
+		lineageTag: 8eae3e6a-1869-4e0e-9be6-7a0ea2635230
+		summarizeBy: none
+		sourceColumn: country_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		lineageTag: f13fad29-c001-4a74-b98c-8eda65eeac63
+		summarizeBy: none
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column longitude
+		dataType: double
+		lineageTag: 1113d21b-31e1-4cae-be21-1d006678428f
+		summarizeBy: none
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column site_format
+		dataType: string
+		lineageTag: 4d8648cd-5cde-42c7-aeb8-3d9de80e2ec5
+		summarizeBy: none
+		sourceColumn: site_format
+
+		annotation SummarizationSetBy = Automatic
+
+	column opening_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 73886e33-62cd-4927-a22e-1b33ceaa7b89
+		summarizeBy: none
+		sourceColumn: opening_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column opening_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 0420dd8f-5c07-421e-8e2c-8e69054c5045
+		summarizeBy: none
+		sourceColumn: opening_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_ev_charging
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ca6c8f9d-3b86-4a05-89c5-a9aec0f39795
+		summarizeBy: none
+		sourceColumn: has_ev_charging
+
+		annotation SummarizationSetBy = Automatic
+
+	column ev_status
+		dataType: string
+		lineageTag: eaa55440-4a37-44cc-a190-37ee483884b3
+		summarizeBy: none
+		sourceColumn: ev_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column ev_since_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e0c98370-7a4a-4ff3-991f-06c4868eeec5
+		summarizeBy: none
+		sourceColumn: ev_since_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ev_charge_points
+		dataType: int64
+		formatString: 0
+		lineageTag: f569a94a-5aa9-4251-97f2-b8b22ded96ec
+		summarizeBy: none
+		sourceColumn: ev_charge_points
+
+		annotation SummarizationSetBy = Automatic
+
+	column site_label = dim_site[site_name] & " (" & dim_site[site_id] & ")"
+		dataType: string
+		lineageTag: aa01ccc7-1efa-4d0f-b092-6e550786815f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_site = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "dim_site"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

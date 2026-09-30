@@ -1,0 +1,67 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "a3feb568ffcc2335addd",
+  "displayName": "Energy Transition",
+  "displayOption": "FitToPage",
+  "height": 1080,
+  "width": 1920,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'05_energy_transition.png'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "05_energy_transition.png"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Normal'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "2fa43fda7e8ba0706565",
+      "target": "f9292110126d46d9b49a",
+      "type": "NoFilter"
+    },
+    {
+      "source": "2fa43fda7e8ba0706565",
+      "target": "f67129a478ba38a2cae7",
+      "type": "NoFilter"
+    },
+    {
+      "source": "2fa43fda7e8ba0706565",
+      "target": "984e117162787ba840bb",
+      "type": "NoFilter"
+    }
+  ]
+}

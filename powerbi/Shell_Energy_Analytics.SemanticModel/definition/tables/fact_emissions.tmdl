@@ -1,0 +1,70 @@
+table fact_emissions
+	lineageTag: 70370a4d-2e93-4d1e-be82-81fa42164ab7
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9dbb6c54-b79b-40bb-9bd4-7b9026ecbcc2
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 6b496a11-9b99-42e3-9295-6dc5463cec64
+		summarizeBy: none
+		sourceColumn: segment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column country_code
+		dataType: string
+		isHidden
+		lineageTag: b3994d18-e679-4f5a-ae36-000ac6044f6e
+		summarizeBy: none
+		sourceColumn: country_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column scope
+		dataType: int64
+		formatString: 0
+		lineageTag: 248f1307-41bd-4fac-b65c-91ab5321a164
+		summarizeBy: sum
+		sourceColumn: scope
+
+		annotation SummarizationSetBy = Automatic
+
+	column scope_label
+		dataType: string
+		lineageTag: d3fd7f99-f0ca-4841-bd00-6b820e26b3f8
+		summarizeBy: none
+		sourceColumn: scope_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column tco2e
+		dataType: double
+		lineageTag: 62dbc662-09e1-4421-b74e-61591a643ae1
+		summarizeBy: sum
+		sourceColumn: tco2e
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fact_emissions = m
+		mode: import
+		source =
+				let
+				  Source = Sql.Database("3tcypxrxblrelj4kg5eeqfadx4-324w3lxlhikuphnygt574zztqi.database.fabric.microsoft.com,1433", "sqldb_shell-71695bad-0418-46a7-b764-75a571b683c1"),
+				  #"Navigation 1" = Source{[Schema = "gold", Item = "fact_emissions"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+
