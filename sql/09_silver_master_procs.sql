@@ -35,6 +35,7 @@ BEGIN
         INTO #typed
         FROM bronze.countries b;
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.countries is empty: silver left unchanged (protects against deleting everything).', 1;
 
@@ -113,6 +114,7 @@ BEGIN
         INTO #typed
         FROM bronze.segments b;
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.segments is empty: silver left unchanged (protects against deleting everything).', 1;
 
@@ -192,6 +194,7 @@ BEGIN
         INTO #typed
         FROM bronze.products b;
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.products is empty: silver left unchanged (protects against deleting everything).', 1;
 
@@ -287,6 +290,7 @@ BEGIN
         LEFT JOIN etl.value_map cm ON cm.domain = 'country' AND cm.raw_value = TRIM(b.country)
         LEFT JOIN etl.value_map fl ON fl.domain = 'flag'    AND fl.raw_value = TRIM(b.has_ev_charging);
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.sites is empty: silver left unchanged (protects against deleting everything).', 1;
 
@@ -403,6 +407,7 @@ BEGIN
         LEFT JOIN etl.value_map cm ON cm.domain = 'country' AND cm.raw_value = TRIM(b.country)
         LEFT JOIN silver.segment sg ON sg.segment_id = TRY_CAST(TRIM(b.segment_id) AS TINYINT);
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.assets is empty: silver left unchanged (protects against deleting everything).', 1;
 

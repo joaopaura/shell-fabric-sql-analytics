@@ -57,6 +57,7 @@ BEGIN
         LEFT JOIN silver.product p ON p.product_id = pm.clean_value
         LEFT JOIN silver.site    s ON s.site_id = TRIM(b.site_id);
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.retail_sales is empty: silver left unchanged (protects against deleting everything).', 1;
 
@@ -168,6 +169,7 @@ BEGIN
         CROSS APPLY (SELECT TRY_CAST(SUBSTRING(b.source_file, NULLIF(PATINDEX('%[12][0-9][0-9][0-9].csv', b.source_file), 0), 4) AS SMALLINT) AS file_year) f
         LEFT JOIN silver.site s ON s.site_id = TRIM(b.site_id);
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.ev_charging is empty: silver left unchanged (protects against deleting everything).', 1;
 
@@ -261,6 +263,7 @@ BEGIN
         CROSS APPLY etl.tvf_parse_datetime(b.record_updated_at) u
         LEFT JOIN silver.asset a ON a.asset_id = TRIM(b.asset_id);
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.production_monthly is empty: silver left unchanged (protects against deleting everything).', 1;
 
@@ -353,6 +356,7 @@ BEGIN
         LEFT JOIN etl.value_map cm ON cm.domain = 'cause' AND cm.raw_value = TRIM(b.cause)
         LEFT JOIN silver.asset a ON a.asset_id = TRIM(b.asset_id);
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.asset_downtime_events is empty: silver left unchanged (protects against deleting everything).', 1;
 
@@ -444,6 +448,7 @@ BEGIN
         LEFT JOIN etl.value_map ct ON ct.domain = 'contract_type' AND ct.raw_value = TRIM(b.contract_type)
         LEFT JOIN silver.asset a ON a.asset_id = TRIM(b.plant_asset_id) AND a.asset_type = 'LNG plant';
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.lng_sales_monthly is empty: silver left unchanged (protects against deleting everything).', 1;
 
@@ -537,6 +542,7 @@ BEGIN
         LEFT JOIN silver.segment sg ON sg.segment_name = TRIM(b.segment)
         LEFT JOIN etl.value_map  cm ON cm.domain = 'country' AND cm.raw_value = TRIM(b.country);
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.financials_monthly is empty: silver left unchanged (protects against deleting everything).', 1;
 
@@ -626,6 +632,7 @@ BEGIN
         LEFT JOIN etl.value_map  cm ON cm.domain = 'country' AND cm.raw_value = TRIM(b.country)
         LEFT JOIN etl.value_map  sc ON sc.domain = 'scope'   AND sc.raw_value = TRIM(b.scope);
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.emissions_monthly is empty: silver left unchanged (protects against deleting everything).', 1;
 
@@ -708,6 +715,7 @@ BEGIN
         FROM bronze.targets b
         CROSS APPLY etl.tvf_parse_number(b.target_value) v;
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.targets is empty: silver left unchanged (protects against deleting everything).', 1;
 
@@ -758,5 +766,30 @@ BEGIN
         EXEC etl.usp_log_end @run_id, 'Failed', @rows_read, NULL, NULL, @rows_rejected, @err;
         THROW;
     END CATCH
+END;
+GO
+
+/* -----------------------------------------------------------------------------
+   Orchestrator: master data first (facts validate against it), then facts.
+   Called by the Fabric pipeline with its run id.
+----------------------------------------------------------------------------- */
+CREATE OR ALTER PROCEDURE etl.usp_silver_all
+    @pipeline_run_id NVARCHAR(100) = 'manual'
+AS
+BEGIN
+    SET NOCOUNT ON;
+    EXEC etl.usp_silver_country             @pipeline_run_id;
+    EXEC etl.usp_silver_segment             @pipeline_run_id;
+    EXEC etl.usp_silver_product             @pipeline_run_id;
+    EXEC etl.usp_silver_site                @pipeline_run_id;
+    EXEC etl.usp_silver_asset               @pipeline_run_id;
+    EXEC etl.usp_silver_retail_sales        @pipeline_run_id;
+    EXEC etl.usp_silver_ev_charging         @pipeline_run_id;
+    EXEC etl.usp_silver_production_monthly  @pipeline_run_id;
+    EXEC etl.usp_silver_asset_downtime      @pipeline_run_id;
+    EXEC etl.usp_silver_lng_sales           @pipeline_run_id;
+    EXEC etl.usp_silver_financials          @pipeline_run_id;
+    EXEC etl.usp_silver_emissions           @pipeline_run_id;
+    EXEC etl.usp_silver_targets             @pipeline_run_id;
 END;
 GO

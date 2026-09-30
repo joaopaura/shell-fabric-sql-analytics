@@ -22,6 +22,7 @@ BEGIN
         DROP TABLE IF EXISTS #typed;
 {typed}
         SET @rows_read = @@ROWCOUNT;
+        ALTER TABLE #typed ALTER COLUMN reject_reason NVARCHAR(200) NULL;  -- room for any reason text
         IF @rows_read = 0
             THROW 50002, 'bronze.{bronze} is empty: silver left unchanged (protects against deleting everything).', 1;
 {post}
@@ -106,9 +107,11 @@ HEADER = """/* =================================================================
 
 """
 
+ORCHESTRATOR = "\n/* -----------------------------------------------------------------------------\n   Orchestrator: master data first (facts validate against it), then facts.\n   Called by the Fabric pipeline with its run id.\n----------------------------------------------------------------------------- */\nCREATE OR ALTER PROCEDURE etl.usp_silver_all\n    @pipeline_run_id NVARCHAR(100) = 'manual'\nAS\nBEGIN\n    SET NOCOUNT ON;\n    EXEC etl.usp_silver_country             @pipeline_run_id;\n    EXEC etl.usp_silver_segment             @pipeline_run_id;\n    EXEC etl.usp_silver_product             @pipeline_run_id;\n    EXEC etl.usp_silver_site                @pipeline_run_id;\n    EXEC etl.usp_silver_asset               @pipeline_run_id;\n    EXEC etl.usp_silver_retail_sales        @pipeline_run_id;\n    EXEC etl.usp_silver_ev_charging         @pipeline_run_id;\n    EXEC etl.usp_silver_production_monthly  @pipeline_run_id;\n    EXEC etl.usp_silver_asset_downtime      @pipeline_run_id;\n    EXEC etl.usp_silver_lng_sales           @pipeline_run_id;\n    EXEC etl.usp_silver_financials          @pipeline_run_id;\n    EXEC etl.usp_silver_emissions           @pipeline_run_id;\n    EXEC etl.usp_silver_targets             @pipeline_run_id;\nEND;\nGO\n"
+
 here = Path(__file__).parent
 (here.parent / "09_silver_master_procs.sql").write_text(
     HEADER.format(n="09", what="master data") + "\n".join(build(s) for s in MASTER), encoding="utf-8")
 (here.parent / "10_silver_fact_procs.sql").write_text(
-    HEADER.format(n="10", what="facts") + "\n".join(build(s) for s in FACTS), encoding="utf-8")
+    HEADER.format(n="10", what="facts") + "\n".join(build(s) for s in FACTS) + ORCHESTRATOR, encoding="utf-8")
 print("ok")
