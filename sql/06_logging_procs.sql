@@ -69,7 +69,8 @@ BEGIN
     SET NOCOUNT ON;
     INSERT INTO etl.run_log (pipeline_run_id, step, object_name, ended_at, status,
                              rows_read, rows_inserted, error_message)
-    VALUES (@pipeline_run_id, 'bronze', @bronze_table, SYSUTCDATETIME(), @status,
+    -- the pipeline may send an explicit NULL (Treat as null), which bypasses parameter defaults
+    VALUES (@pipeline_run_id, 'bronze', @bronze_table, SYSUTCDATETIME(), ISNULL(@status, 'Succeeded'),
             @rows_copied, @rows_copied, @error_message);
 END;
 GO
