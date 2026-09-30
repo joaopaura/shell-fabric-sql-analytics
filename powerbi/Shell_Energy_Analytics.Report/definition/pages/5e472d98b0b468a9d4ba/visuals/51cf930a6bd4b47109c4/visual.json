@@ -251,6 +251,21 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "valueDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Production vs Plan %",
+            "id": "field-afb2fc49-0000-0000-0000-30d5380f97e7"
+          }
         }
       ]
     },

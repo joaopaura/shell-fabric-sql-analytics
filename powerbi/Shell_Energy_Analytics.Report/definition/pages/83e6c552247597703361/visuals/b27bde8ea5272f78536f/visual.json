@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
-  "name": "33066743c37ae16e1716",
+  "name": "b27bde8ea5272f78536f",
   "position": {
-    "x": 1292,
-    "y": 750,
-    "z": 2500,
-    "height": 260,
-    "width": 568,
-    "tabOrder": 14
+    "x": 60,
+    "y": 380,
+    "z": 2300,
+    "height": 276,
+    "width": 876,
+    "tabOrder": 12
   },
   "visual": {
     "visualType": "tableEx",
@@ -20,60 +20,90 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "vw_dq_results"
+                      "Entity": "vw_pipeline_runs"
                     }
                   },
-                  "Property": "result"
+                  "Property": "object_name"
                 }
               },
-              "queryRef": "vw_dq_results.result",
-              "nativeQueryRef": "result",
-              "displayName": "Result"
+              "queryRef": "vw_pipeline_runs.object_name",
+              "nativeQueryRef": "object_name",
+              "displayName": "Silver table"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "vw_dq_results"
+                      "Entity": "vw_pipeline_runs"
                     }
                   },
-                  "Property": "check_name"
+                  "Property": "rows_read"
                 }
               },
-              "queryRef": "vw_dq_results.check_name",
-              "nativeQueryRef": "check_name",
-              "displayName": "Check"
+              "queryRef": "vw_pipeline_runs.rows_read",
+              "nativeQueryRef": "rows_read",
+              "displayName": "Rows read"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "vw_dq_results"
+                      "Entity": "vw_pipeline_runs"
                     }
                   },
-                  "Property": "table_name"
+                  "Property": "rows_inserted"
                 }
               },
-              "queryRef": "vw_dq_results.table_name",
-              "nativeQueryRef": "table_name",
-              "displayName": "Table"
+              "queryRef": "vw_pipeline_runs.rows_inserted",
+              "nativeQueryRef": "rows_inserted",
+              "displayName": "Inserted"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "vw_dq_results"
+                      "Entity": "vw_pipeline_runs"
                     }
                   },
-                  "Property": "actual_value"
+                  "Property": "rows_updated"
                 }
               },
-              "queryRef": "vw_dq_results.actual_value",
-              "nativeQueryRef": "actual_value",
-              "displayName": "Actual"
+              "queryRef": "vw_pipeline_runs.rows_updated",
+              "nativeQueryRef": "rows_updated",
+              "displayName": "Updated"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "vw_pipeline_runs"
+                    }
+                  },
+                  "Property": "rows_rejected"
+                }
+              },
+              "queryRef": "vw_pipeline_runs.rows_rejected",
+              "nativeQueryRef": "rows_rejected",
+              "displayName": "Rejected"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "vw_pipeline_runs"
+                    }
+                  },
+                  "Property": "duration_seconds"
+                }
+              },
+              "queryRef": "vw_pipeline_runs.duration_seconds",
+              "nativeQueryRef": "duration_seconds",
+              "displayName": "Seconds"
             }
           ]
         }
@@ -86,7 +116,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
+                  "Value": "12D"
                 }
               }
             }
@@ -99,7 +129,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
+                  "Value": "12D"
                 }
               }
             }
@@ -147,12 +177,12 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "09c9ebf50d2dc5c58091",
+        "name": "c4d6324983e8bea8a45f",
         "field": {
           "Column": {
             "Expression": {
               "SourceRef": {
-                "Entity": "vw_dq_results"
+                "Entity": "vw_pipeline_runs"
               }
             },
             "Property": "is_latest_run"
@@ -164,7 +194,7 @@
           "From": [
             {
               "Name": "t",
-              "Entity": "vw_dq_results",
+              "Entity": "vw_pipeline_runs",
               "Type": 0
             }
           ],
@@ -189,6 +219,59 @@
                       {
                         "Literal": {
                           "Value": "true"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "44feb540c8832c1c9f1f",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "vw_pipeline_runs"
+              }
+            },
+            "Property": "step"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "w",
+              "Entity": "vw_pipeline_runs",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "w"
+                          }
+                        },
+                        "Property": "step"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'silver'"
                         }
                       }
                     ]

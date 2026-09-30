@@ -221,6 +221,21 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "valueDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.EV Charge Points",
+            "id": "field-4e17a910-0000-0000-0000-787b23e9211a"
+          }
         }
       ]
     },

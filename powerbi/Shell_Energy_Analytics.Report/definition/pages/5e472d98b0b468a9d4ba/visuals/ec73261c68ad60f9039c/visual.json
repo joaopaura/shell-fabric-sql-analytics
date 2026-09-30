@@ -221,6 +221,21 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "valueDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Asset Uptime",
+            "id": "field-1bc0b9a7-0000-0000-0000-ff2f9f5b312e"
+          }
         }
       ]
     },

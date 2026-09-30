@@ -235,6 +235,21 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "valueDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.DQ Checks Passed",
+            "id": "field-c25537d4-0000-0000-0000-4860d89d2fd6"
+          }
         }
       ]
     },

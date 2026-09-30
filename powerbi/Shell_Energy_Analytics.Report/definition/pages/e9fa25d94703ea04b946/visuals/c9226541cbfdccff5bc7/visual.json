@@ -113,6 +113,20 @@
               }
             }
           }
+        },
+        {
+          "properties": {
+            "showSeries": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.EBITDA ($bn)"
+          }
         }
       ],
       "valueAxis": [
@@ -141,7 +155,7 @@
             "position": {
               "expr": {
                 "Literal": {
-                  "Value": "'TopLeft'"
+                  "Value": "'Top'"
                 }
               }
             }

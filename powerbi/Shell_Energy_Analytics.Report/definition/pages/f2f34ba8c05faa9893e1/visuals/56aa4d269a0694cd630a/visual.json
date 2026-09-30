@@ -221,6 +221,21 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "valueDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Fuel Volume ML",
+            "id": "field-250b4d5b-0000-0000-0000-3930d6789eab"
+          }
         }
       ]
     },

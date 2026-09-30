@@ -221,6 +221,21 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "valueDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Scope 1+2 Mt",
+            "id": "field-023117ba-0000-0000-0000-6c7be231a334"
+          }
         }
       ]
     },

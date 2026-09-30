@@ -128,9 +128,9 @@ PAGES = {
         slicers=["Year", "Region", "Country", "Site format"],
         kpis=["Fuel volume", "Fuel revenue", "Non-fuel revenue", "Margin per litre", "Active sites", "Transactions"],
         panels=[(TWO[0][0], ROW2_Y, TWO[0][1], ROW2_H, "Fuel volume trend", "Million litres per month, current vs prior year", ""),
-                (TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H, "Site network", "Sites by gross margin | bubble size = fuel volume", ""),
+                (TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H, "Site network", "400 sites in 12 markets | hover a site for volume and margin", ""),
                 (THREE[0][0], ROW3_Y, THREE[0][1], ROW3_H, "Gross margin by product", "Fuel vs non-fuel, USD m", ""),
-                (THREE[1][0], ROW3_Y, THREE[1][1], ROW3_H, "Fuel volume by country", "Million litres and change vs prior year", ""),
+                (THREE[1][0], ROW3_Y, THREE[1][1], ROW3_H, "Fuel volume by country", "Top 10 countries, million litres", ""),
                 (THREE[2][0], ROW3_Y, THREE[2][1], ROW3_H, "Top 10 sites", "Gross margin in the selected period", "")]),
     "04_upstream": dict(
         nav=3, title="Upstream &amp; Integrated Gas <span>|</span> Production",
@@ -138,7 +138,7 @@ PAGES = {
         slicers=["Year", "Segment", "Asset type", "Country"],
         kpis=["Production (kboe/d)", "Production vs plan", "Operating cost per boe", "Asset uptime", "LNG sold", "Spot LNG share"],
         panels=[(TWO[0][0], ROW2_Y, TWO[0][1], ROW2_H, "Production vs plan", "Thousand barrels of oil equivalent per day, actual vs plan", ""),
-                (TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H, "Production by asset", "kboe/d in the selected period and variance vs plan", ""),
+                (TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H, "Production by asset", "Top 10 assets, kboe/d | hover for variance vs plan and uptime", ""),
                 (THREE[0][0], ROW3_Y, THREE[0][1], ROW3_H, "Downtime by cause", "Hours per year, planned vs unplanned", ""),
                 (THREE[1][0], ROW3_Y, THREE[1][1], ROW3_H, "LNG sales by destination", "Million tonnes, long-term vs spot", ""),
                 (THREE[2][0], ROW3_Y, THREE[2][1], ROW3_H, "LNG price realisation", "USD per MMBtu, long-term vs spot", "")]),
@@ -150,17 +150,17 @@ PAGES = {
         panels=[(TWO[0][0], ROW2_Y, TWO[0][1], ROW2_H, "EV charging growth", "Charging sessions and MWh delivered per month", ""),
                 (TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H, "Scope 1+2 emissions vs target", "MtCO2e per year and path to the 2030 target (50% vs 2016)", ""),
                 (THREE[0][0], ROW3_Y, THREE[0][1], ROW3_H, "Emissions by scope", "MtCO2e in the selected period", ""),
-                (THREE[1][0], ROW3_Y, THREE[1][1], ROW3_H, "EV charge points by country", "Installed points and share of EV hubs", ""),
+                (THREE[1][0], ROW3_Y, THREE[1][1], ROW3_H, "EV charge points by country", "Top 10 countries, installed points at period end", ""),
                 (THREE[2][0], ROW3_Y, THREE[2][1], ROW3_H, "Low-carbon revenue share", "Share of group revenue per year vs target", "")]),
     "06_data_pipeline": dict(
         nav=5, title="Data Pipeline &amp; Quality <span>|</span> Microsoft Fabric",
         sub="Dirty CSV files loaded by a Fabric pipeline into a SQL database and cleaned in T-SQL across bronze, silver and gold",
         slicers=["", "", "", ""],
         kpis=["Pipeline runs", "Rows landed (bronze)", "Rows rejected", "Reject rate", "Data quality checks passed", "Last run duration"],
-        panels=[(TWO[0][0], ROW2_Y, TWO[0][1], ROW2_H, "Rows validated by table", "Silver layer, rows that passed validation vs rejected, latest run", ""),
+        panels=[(TWO[0][0], ROW2_Y, TWO[0][1], ROW2_H, "Silver layer by table", "Rows read, merged and rejected by each stored procedure, latest run", ""),
                 (TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H, "Rejected rows by reason", "Silver validation rules, latest run", ""),
                 (48, ROW3_Y, 1208, ROW3_H, "Architecture", "End-to-end flow on Microsoft Fabric", arch()),
-                (THREE[2][0], ROW3_Y, THREE[2][1], ROW3_H, "Data quality checks", "Expected vs actual, latest run", "")]),
+                (THREE[2][0], ROW3_Y, THREE[2][1], ROW3_H, "Data quality checks", "32 automated checks after the gold build, latest run", "")]),
 }
 
 

@@ -221,6 +221,21 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "valueDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Low-Carbon Revenue Share",
+            "id": "field-b72c7288-0000-0000-0000-87c36f74dc7d"
+          }
         }
       ]
     },

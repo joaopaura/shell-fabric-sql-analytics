@@ -1,7 +1,7 @@
 """_Measures table for the Shell report. Every measure has a description (///) and a display folder."""
 import uuid
 from pathlib import Path
-tag = lambda: str(uuid.uuid4())
+tag = lambda *k: str(uuid.uuid5(uuid.NAMESPACE_URL, "shell-measures/" + "/".join(k)))
 M = []   # (folder, name, expr, fmt, description)
 GREEN, RED, GREY = "#1E8E5A", "#DD1D21", "#5E5E59"
 PCT = "+0.0%;-0.0%;0.0%"
@@ -66,6 +66,8 @@ add("02 Mobility", "Transactions (M)", "DIVIDE ( SUM ( fact_retail_sales[transac
 py("02 Mobility", "Transactions (M)", "#,0.0\\M")
 add("02 Mobility", "Site Margin Top 10", "IF ( RANKX ( ALLSELECTED ( dim_site[site_label] ), [Retail Gross Margin],, DESC ) <= 10, [Retail Gross Margin] )", "$#,0", "Gross margin for the 10 best sites.")
 
+add("02 Mobility", "Fuel Volume Top 10", "IF ( RANKX ( ALLSELECTED ( dim_country[country_name] ), [Fuel Volume ML],, DESC ) <= 10, [Fuel Volume ML] )", "#,0\\ \\M\\L", "Fuel volume of the 10 largest countries.")
+
 # ---------------------------------------------------------------- 03 Upstream & Integrated Gas
 add("03 Upstream", "Production boe", "SUM ( fact_production[total_boe] )", "#,0", "Barrels of oil equivalent produced.")
 add("03 Upstream", "Days Produced", "SUMX ( VALUES ( fact_production[date_key] ), CALCULATE ( MAX ( fact_production[days_in_month] ) ) )", "#,0", "Calendar days covered by the monthly production rows.")
@@ -74,7 +76,7 @@ py("03 Upstream", "Production kboe/d", "#,0")
 add("03 Upstream", "Planned kboe/d", "DIVIDE ( SUM ( fact_production[planned_boe] ), [Days Produced] ) / 1000", "#,0", "Planned production, thousand boe per day.")
 add("03 Upstream", "Production vs Plan %", "IF ( ISBLANK ( [Planned kboe/d] ), BLANK (), DIVIDE ( [Production kboe/d], [Planned kboe/d] ) - 1 )", PCT, "Actual vs planned production.")
 add("99 Formatting", "Production vs Plan % Colour", f'IF ( [Production vs Plan %] >= 0, "{GREEN}", "{RED}" )', None, "Font colour.")
-add("03 Upstream", "Production Top 12", "IF ( RANKX ( ALLSELECTED ( dim_asset[asset_name] ), [Production kboe/d],, DESC ) <= 12, [Production kboe/d] )", "#,0", "Production of the 12 largest assets.")
+add("03 Upstream", "Production Top 10", "IF ( RANKX ( ALLSELECTED ( dim_asset[asset_name] ), [Production kboe/d],, DESC ) <= 10, [Production kboe/d] )", "#,0", "Production of the 10 largest assets.")
 add("03 Upstream", "Opex per boe", "DIVIDE ( SUM ( fact_production[opex_usd] ), [Production boe] )", "$#,0.00", "Operating cost per barrel of oil equivalent, USD.")
 py("03 Upstream", "Opex per boe", "$#,0.00", higher_better=False)
 add("03 Upstream", "Asset Uptime", "1 - DIVIDE ( SUM ( fact_production[downtime_hours] ), SUMX ( fact_production, 24 * fact_production[days_in_month] ) )", "0.0%", "Share of hours the assets were running.")
@@ -96,6 +98,7 @@ add("04 Energy Transition", "EV Charge Points",
     EVD + "RETURN SUMX ( FILTER ( dim_site, NOT ISBLANK ( dim_site[ev_since_date] ) && dim_site[ev_since_date] <= d ), dim_site[ev_charge_points] )",
     "#,0", "EV charge points installed at the end of the period.")
 py("04 Energy Transition", "EV Charge Points", "#,0")
+add("04 Energy Transition", "EV Charge Points Top 10", "IF ( RANKX ( ALLSELECTED ( dim_country[country_name] ), [EV Charge Points],, DESC ) <= 10, [EV Charge Points] )", "#,0", "EV charge points of the 10 largest countries.")
 add("04 Energy Transition", "EV Hub Share",
     EVD + "RETURN DIVIDE ( COUNTROWS ( FILTER ( dim_site, NOT ISBLANK ( dim_site[ev_since_date] ) && dim_site[ev_since_date] <= d ) ), COUNTROWS ( dim_site ) )",
     "0.0%", "Share of sites with EV charging at the end of the period.")
@@ -167,13 +170,13 @@ add("06 Pipeline", "Rejected Rows (latest)", "CALCULATE ( SUM ( vw_rejections[re
 
 
 def write(path: Path):
-    s = f"table _Measures\n\tlineageTag: {tag()}\n\n"
+    s = f"table _Measures\n\tlineageTag: {tag('table')}\n\n"
     for folder, name, expr, fmt, desc in M:
         n = f"'{name}'"
         s += f"\t/// {desc}\n\tmeasure {n} = {expr}\n"
         if fmt:
             s += f"\t\tformatString: {fmt}\n"
-        s += f"\t\tdisplayFolder: {folder}\n\t\tlineageTag: {tag()}\n\n"
+        s += f"\t\tdisplayFolder: {folder}\n\t\tlineageTag: {tag(name)}\n\n"
     s += ('\tpartition _Measures = m\n\t\tmode: import\n\t\tsource =\n\t\t\t\tlet\n'
           '\t\t\t\t  Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),\n'
           '\t\t\t\t    #"Removed Columns" = Table.RemoveColumns(Source,{"Column1"})\n\t\t\t\tin\n\t\t\t\t  #"Removed Columns"\n\n'

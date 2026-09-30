@@ -221,6 +221,21 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "valueDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.EBITDA Margin",
+            "id": "field-f8f689e9-0000-0000-0000-cbdfb7e07d39"
+          }
         }
       ]
     },

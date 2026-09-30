@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Production Top 12"
+                  "Property": "Production Top 10"
                 }
               },
-              "queryRef": "_Measures.Production Top 12",
-              "nativeQueryRef": "Production Top 12"
+              "queryRef": "_Measures.Production Top 10",
+              "nativeQueryRef": "Production Top 10"
             }
           ]
         },
@@ -93,7 +93,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Production Top 12"
+                "Property": "Production Top 10"
               }
             },
             "direction": "Descending"
@@ -142,7 +142,7 @@
             "position": {
               "expr": {
                 "Literal": {
-                  "Value": "'TopLeft'"
+                  "Value": "'Top'"
                 }
               }
             }
@@ -165,7 +165,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Production Top 12"
+            "metadata": "_Measures.Production Top 10"
           }
         }
       ]

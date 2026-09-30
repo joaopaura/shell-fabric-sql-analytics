@@ -221,6 +221,21 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "valueDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.EV Revenue ($m)",
+            "id": "field-88589020-0000-0000-0000-3a6cd6d15479"
+          }
         }
       ]
     },

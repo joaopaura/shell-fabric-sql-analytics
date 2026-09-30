@@ -1,772 +1,784 @@
 table _Measures
-	lineageTag: c1cb74a3-27fb-48e7-b607-3c1e615bf283
+	lineageTag: 0e600441-74c1-5f38-b07a-a31766e67189
 
 	/// Last pipeline step that finished in Fabric.
 	measure 'Data As Of' = FORMAT ( CALCULATE ( MAX ( vw_pipeline_runs[ended_at] ), REMOVEFILTERS () ), "dd mmm yyyy", "en-US" )
 		displayFolder: 00 Base
-		lineageTag: 2bd4c37c-1199-4c7d-9b72-f0f7f5f162f6
+		lineageTag: b5fe9c22-ca7b-593b-ab5b-21fd5edcdf15
 
 	/// Last year with data (2025).
 	measure 'Last Data Year' = INT ( CALCULATE ( MAX ( fact_financials[date_key] ), REMOVEFILTERS () ) / 10000 )
 		formatString: 0
 		displayFolder: 00 Base
-		lineageTag: 29ce6d91-5481-4735-8609-6c21c199d43a
+		lineageTag: a72e486a-1d47-526c-a888-980037158b49
 
 	/// Year in the filter context, capped at the last year with data.
 	measure 'Selected Year' = MIN ( MAX ( dim_date[year] ), [Last Data Year] )
 		formatString: 0
 		displayFolder: 00 Base
-		lineageTag: 452ceaad-72d3-4c81-8330-7b6cb1eeec9a
+		lineageTag: 12c82647-4781-5184-b207-575cda8eeefc
 
 	/// Neutral font colour.
 	measure 'Neutral Colour' = "#5E5E59"
 		displayFolder: 99 Formatting
-		lineageTag: edb31355-e518-4773-b21d-c1f0f790322e
+		lineageTag: 8b18e68d-6f0e-5784-abce-69e50156467a
 
 	/// Group revenue, USD.
 	measure 'Revenue' = SUM ( fact_financials[revenue_usd] )
 		formatString: $#,0
 		displayFolder: 01 Overview
-		lineageTag: ca865133-7afe-46d2-a287-33007dae8680
+		lineageTag: 2cb51867-8a11-5498-bfbb-34237310842b
 
 	/// Group revenue in USD billion.
 	measure 'Revenue ($bn)' = DIVIDE ( [Revenue], 1e9 )
 		formatString: $#,0.0\b\n
 		displayFolder: 01 Overview
-		lineageTag: 65d900a4-03fb-4ce7-8e96-525695f37435
+		lineageTag: 0e0254b0-b89f-5b6b-9d71-a6605ebf6d24
 
 	/// Revenue in the same period of the prior year.
 	measure 'Revenue PY' = CALCULATE ( [Revenue], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: $#,0
 		displayFolder: 01 Overview
-		lineageTag: 911c3030-f70b-473c-a2b5-dd29bcf7088b
+		lineageTag: 7db8d7ef-ccdb-59e9-ab09-d536644356e2
 
 	/// Change of Revenue vs prior year.
 	measure 'Revenue YoY %' = IF ( ISBLANK ( [Revenue PY] ), BLANK (), DIVIDE ( [Revenue] - [Revenue PY], [Revenue PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 01 Overview
-		lineageTag: adde16cb-d5ac-487f-9638-ffd5d1bb1e02
+		lineageTag: 52fe1a7a-d1a5-513c-b4e6-84ecf7a69ef0
 
 	/// Font colour for the change label.
 	measure 'Revenue YoY % Colour' = IF ( [Revenue YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: 4e170f3a-14b6-4fac-8386-ef3ef52a1afa
+		lineageTag: 4a1a0306-542b-57bb-8395-80bdce648e35
 
 	/// EBITDA recalculated in silver as revenue minus operating cost.
 	measure 'EBITDA' = SUM ( fact_financials[ebitda_usd] )
 		formatString: $#,0
 		displayFolder: 01 Overview
-		lineageTag: 85c65dcb-dc38-4107-8e7a-4cf98d246007
+		lineageTag: 745c0077-f399-5084-972c-5dddd7eafef3
 
 	/// EBITDA in USD billion.
 	measure 'EBITDA ($bn)' = DIVIDE ( [EBITDA], 1e9 )
 		formatString: $#,0.0\b\n
 		displayFolder: 01 Overview
-		lineageTag: a3a4458a-c392-437d-9a1d-88359890e815
+		lineageTag: 9be684bb-28fa-5144-852a-e49f033da02d
 
 	/// EBITDA in the same period of the prior year.
 	measure 'EBITDA PY' = CALCULATE ( [EBITDA], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: $#,0
 		displayFolder: 01 Overview
-		lineageTag: 2d80acb5-54a9-45d8-8d8a-67594dd18aaa
+		lineageTag: 11b128ee-b613-5642-a095-a9db07751479
 
 	/// Change of EBITDA vs prior year.
 	measure 'EBITDA YoY %' = IF ( ISBLANK ( [EBITDA PY] ), BLANK (), DIVIDE ( [EBITDA] - [EBITDA PY], [EBITDA PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 01 Overview
-		lineageTag: cf0c51b1-f878-4f84-bd54-9fef8161a62a
+		lineageTag: 54c6f0ae-f7ad-52e5-bdf3-b2f3775a11d0
 
 	/// Font colour for the change label.
 	measure 'EBITDA YoY % Colour' = IF ( [EBITDA YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: 11f205cd-11e1-46aa-9af5-33d8d0e66304
+		lineageTag: ffc01063-7777-5570-aced-9ea068c3b9d5
 
 	/// EBITDA as a share of revenue.
 	measure 'EBITDA Margin' = DIVIDE ( [EBITDA], [Revenue] )
 		formatString: 0.0%
 		displayFolder: 01 Overview
-		lineageTag: 27ddde34-a9aa-4f64-9a22-80a6f310773c
+		lineageTag: d95a27cc-314b-53f0-935f-50e39bcdba9f
 
 	/// EBITDA Margin in the same period of the prior year.
 	measure 'EBITDA Margin PY' = CALCULATE ( [EBITDA Margin], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: 0.0%
 		displayFolder: 01 Overview
-		lineageTag: ee99b1c3-b94f-43cf-8c34-2c06b462fbad
+		lineageTag: 2e7e7830-3d86-5e1c-a9e9-511ab2f9d552
 
 	/// Change of EBITDA Margin vs prior year in percentage points.
 	measure 'EBITDA Margin vs PY' = IF ( ISBLANK ( [EBITDA Margin PY] ), BLANK (), ( [EBITDA Margin] - [EBITDA Margin PY] ) * 100 )
 		formatString: +0.0 pp;-0.0 pp;0.0 pp
 		displayFolder: 01 Overview
-		lineageTag: 8ce57d71-a49b-401e-bcff-13ab8caefac3
+		lineageTag: 7f53aa77-75a0-59ba-aba9-acf501095136
 
 	/// Font colour for the change label.
 	measure 'EBITDA Margin vs PY Colour' = IF ( [EBITDA Margin vs PY] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: dac98b1f-a9af-4b91-b06a-2f1637c8a3e9
+		lineageTag: 7845e53d-71f9-51b1-a29f-9651cb20f428
 
 	/// Capital expenditure, USD.
 	measure 'Capex' = SUM ( fact_financials[capex_usd] )
 		formatString: $#,0
 		displayFolder: 01 Overview
-		lineageTag: cab6cd60-718e-4baf-b122-1cf88030755d
+		lineageTag: aa91feaa-be4b-5e5b-8876-33aa798656ce
 
 	/// Share of revenue among the selected segments.
 	measure 'Revenue Share %' = DIVIDE ( [Revenue], CALCULATE ( [Revenue], ALLSELECTED ( dim_segment ) ) )
 		formatString: 0.0%
 		displayFolder: 01 Overview
-		lineageTag: cdea144d-d802-409a-bce8-b169385bc4cb
+		lineageTag: 1cc1d4ad-e19e-56c7-8529-cf6d5295e75f
 
 	/// EBITDA for the 10 largest countries.
 	measure 'EBITDA Top 10' = IF ( RANKX ( ALLSELECTED ( dim_country[country_name] ), [EBITDA],, DESC ) <= 10, [EBITDA] )
 		formatString: $#,0
 		displayFolder: 01 Overview
-		lineageTag: 32c43c30-06c8-41e5-a38a-db6b21a0136f
+		lineageTag: c60f18fd-718d-5111-bfa7-907d7f07ba34
 
 	/// Fuel sold in million litres.
 	measure 'Fuel Volume ML' = DIVIDE ( SUM ( fact_retail_sales[volume_litres] ), 1e6 )
 		formatString: #,0\ \M\L
 		displayFolder: 02 Mobility
-		lineageTag: 314ab3c9-d4e0-45e1-994f-acc8ee0a71fd
+		lineageTag: 8b1e15ce-a299-5ef9-9974-feef3009a9b2
 
 	/// Fuel Volume ML in the same period of the prior year.
 	measure 'Fuel Volume ML PY' = CALCULATE ( [Fuel Volume ML], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: #,0\ \M\L
 		displayFolder: 02 Mobility
-		lineageTag: 71725fea-efb3-495c-8e91-bf243ad6789c
+		lineageTag: 4a88ed84-f9a7-5a04-a14a-167ac068d02a
 
 	/// Change of Fuel Volume ML vs prior year.
 	measure 'Fuel Volume ML YoY %' = IF ( ISBLANK ( [Fuel Volume ML PY] ), BLANK (), DIVIDE ( [Fuel Volume ML] - [Fuel Volume ML PY], [Fuel Volume ML PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 02 Mobility
-		lineageTag: a5d6f4a4-5fa5-4cc2-8ca3-ae46451df430
+		lineageTag: e7eb19cc-6ea3-584b-8e50-5b180b76625a
 
 	/// Font colour for the change label.
 	measure 'Fuel Volume ML YoY % Colour' = IF ( [Fuel Volume ML YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: 1b56dfba-fa87-40eb-ad70-871ac0b70666
+		lineageTag: 4ddb4170-d4bb-54eb-bb6d-4435cf4fd39f
 
 	/// Fuel revenue, USD.
 	measure 'Fuel Revenue' = CALCULATE ( SUM ( fact_retail_sales[revenue_usd] ), dim_product[product_group] = "Fuel" )
 		formatString: $#,0
 		displayFolder: 02 Mobility
-		lineageTag: c9e877a5-169c-4bb4-ad94-45000320f21b
+		lineageTag: 72a6709b-9473-59e8-80ef-8d0b00c9f506
 
 	/// Fuel revenue in USD billion.
 	measure 'Fuel Revenue ($bn)' = DIVIDE ( [Fuel Revenue], 1e9 )
 		formatString: $#,0.00\b\n
 		displayFolder: 02 Mobility
-		lineageTag: 9f42cae0-52fe-44f1-8718-e56411df8331
+		lineageTag: 63f404ca-7ae2-5663-873f-a83caa87a4b1
 
 	/// Fuel Revenue ($bn) in the same period of the prior year.
 	measure 'Fuel Revenue ($bn) PY' = CALCULATE ( [Fuel Revenue ($bn)], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: $#,0.00\b\n
 		displayFolder: 02 Mobility
-		lineageTag: be27bea1-1788-4b35-9514-7db8f66e8be4
+		lineageTag: 0340496d-2998-5678-a8f0-20d800a4325c
 
 	/// Change of Fuel Revenue ($bn) vs prior year.
 	measure 'Fuel Revenue ($bn) YoY %' = IF ( ISBLANK ( [Fuel Revenue ($bn) PY] ), BLANK (), DIVIDE ( [Fuel Revenue ($bn)] - [Fuel Revenue ($bn) PY], [Fuel Revenue ($bn) PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 02 Mobility
-		lineageTag: 048ca5c7-2813-4b7a-8346-3efeaf3546e4
+		lineageTag: 8ece5366-2189-5ecf-836b-1a58b7d64e8e
 
 	/// Font colour for the change label.
 	measure 'Fuel Revenue ($bn) YoY % Colour' = IF ( [Fuel Revenue ($bn) YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: f3ea2196-4c84-48de-aac6-a0305edfbc23
+		lineageTag: 7f9b5d93-d8b9-5efb-91ba-6b982c18bf62
 
 	/// Shop and car wash revenue, USD.
 	measure 'Non-fuel Revenue' = CALCULATE ( SUM ( fact_retail_sales[revenue_usd] ), dim_product[product_group] = "Non-fuel" )
 		formatString: $#,0
 		displayFolder: 02 Mobility
-		lineageTag: 8997de39-ac70-4774-99e6-1bb8ece8832b
+		lineageTag: a3bc9040-55e5-5d22-bdc9-6fb7b0d09c24
 
 	/// Shop and car wash revenue in USD million.
 	measure 'Non-fuel Revenue ($m)' = DIVIDE ( [Non-fuel Revenue], 1e6 )
 		formatString: $#,0\m
 		displayFolder: 02 Mobility
-		lineageTag: 434dd102-f057-4813-96b6-808c366f4dbd
+		lineageTag: 0ab2a8d2-84fd-5356-8f1d-551694895b1d
 
 	/// Non-fuel Revenue ($m) in the same period of the prior year.
 	measure 'Non-fuel Revenue ($m) PY' = CALCULATE ( [Non-fuel Revenue ($m)], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: $#,0\m
 		displayFolder: 02 Mobility
-		lineageTag: bc65a2d1-299b-42bb-8282-99af148a8082
+		lineageTag: 1b91cd48-d1a2-531c-b94f-7030ef142f72
 
 	/// Change of Non-fuel Revenue ($m) vs prior year.
 	measure 'Non-fuel Revenue ($m) YoY %' = IF ( ISBLANK ( [Non-fuel Revenue ($m) PY] ), BLANK (), DIVIDE ( [Non-fuel Revenue ($m)] - [Non-fuel Revenue ($m) PY], [Non-fuel Revenue ($m) PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 02 Mobility
-		lineageTag: a5a4f861-2185-4c9c-bc74-8fcac05aa797
+		lineageTag: 12df727a-b90e-5bb5-8ddc-b201e32747c9
 
 	/// Font colour for the change label.
 	measure 'Non-fuel Revenue ($m) YoY % Colour' = IF ( [Non-fuel Revenue ($m) YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: b46d3ab5-2192-4117-9b4a-5a261cd67039
+		lineageTag: 0513917f-71bf-5a8a-a78b-7eeefad1804b
 
 	/// Revenue minus cost of goods, USD.
 	measure 'Retail Gross Margin' = SUM ( fact_retail_sales[gross_margin_usd] )
 		formatString: $#,0
 		displayFolder: 02 Mobility
-		lineageTag: 0565d1b4-4c93-40c9-8e34-ec2e512d5a4b
+		lineageTag: f30dd146-e327-54df-a32d-1f3963ac7c37
 
 	/// Gross margin on fuel, USD.
 	measure 'Fuel Gross Margin' = CALCULATE ( [Retail Gross Margin], dim_product[product_group] = "Fuel" )
 		formatString: $#,0
 		displayFolder: 02 Mobility
-		lineageTag: 23421a96-4deb-47fd-ae86-00891ac205fe
+		lineageTag: 5ae7c777-6be3-5e0b-9e39-cff7f72243a7
 
 	/// Fuel gross margin per litre, USD.
 	measure 'Margin per Litre' = DIVIDE ( [Fuel Gross Margin], SUM ( fact_retail_sales[volume_litres] ) )
 		formatString: $0.000
 		displayFolder: 02 Mobility
-		lineageTag: 463691db-e11d-4ba0-bb96-e4762ffea72b
+		lineageTag: 66e10239-2148-52a9-b535-32488bbf2973
 
 	/// Margin per Litre in the same period of the prior year.
 	measure 'Margin per Litre PY' = CALCULATE ( [Margin per Litre], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: $0.000
 		displayFolder: 02 Mobility
-		lineageTag: 270cc4d4-af9a-4fe6-94e8-aea4f9093bd2
+		lineageTag: 7a136412-aa97-554f-a9ca-e5c49b986695
 
 	/// Change of Margin per Litre vs prior year.
 	measure 'Margin per Litre YoY %' = IF ( ISBLANK ( [Margin per Litre PY] ), BLANK (), DIVIDE ( [Margin per Litre] - [Margin per Litre PY], [Margin per Litre PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 02 Mobility
-		lineageTag: 8a6c4cbf-2f5f-4d59-b7de-0d4a0976321d
+		lineageTag: 66fc5885-947b-5b2e-a0ec-2731478def2e
 
 	/// Font colour for the change label.
 	measure 'Margin per Litre YoY % Colour' = IF ( [Margin per Litre YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: a7e08ecb-29d6-473e-bc7f-9a29c427bd98
+		lineageTag: df065e0c-cb7e-5270-a438-062c8e147acf
 
 	/// Sites with sales in the period.
 	measure 'Active Sites' = DISTINCTCOUNT ( fact_retail_sales[site_id] )
 		formatString: #,0
 		displayFolder: 02 Mobility
-		lineageTag: a7ce1b94-979e-463d-8678-75678306b25f
+		lineageTag: 747de2bc-b5f2-5206-b9a0-7c21fb99b628
 
 	/// Active Sites in the same period of the prior year.
 	measure 'Active Sites PY' = CALCULATE ( [Active Sites], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: #,0
 		displayFolder: 02 Mobility
-		lineageTag: f08092f1-ce09-49e4-92e5-d40dc0e709f1
+		lineageTag: bbee9a3b-bfc0-5411-8ee4-32c8519567f7
 
 	/// Change of Active Sites vs prior year.
 	measure 'Active Sites vs PY' = IF ( ISBLANK ( [Active Sites PY] ), BLANK (), [Active Sites] - [Active Sites PY] )
 		formatString: +#,0;-#,0;0
 		displayFolder: 02 Mobility
-		lineageTag: 92abaf41-bba9-476a-940c-e7d066496557
+		lineageTag: b232b183-efd9-5f24-a120-c768b8aab32c
 
 	/// Font colour for the change label.
 	measure 'Active Sites vs PY Colour' = IF ( [Active Sites vs PY] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: 48ef15f7-eb09-43f4-a3c7-af3c5a966cd7
+		lineageTag: 3983eef5-7e70-54d1-854e-9e85d349d61c
 
 	/// Customer transactions in millions.
 	measure 'Transactions (M)' = DIVIDE ( SUM ( fact_retail_sales[transactions] ), 1e6 )
 		formatString: #,0.0\M
 		displayFolder: 02 Mobility
-		lineageTag: 02103326-3196-450b-af2e-fc86700afea3
+		lineageTag: 526af0d7-4e19-5594-ba1c-cacd45539f07
 
 	/// Transactions (M) in the same period of the prior year.
 	measure 'Transactions (M) PY' = CALCULATE ( [Transactions (M)], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: #,0.0\M
 		displayFolder: 02 Mobility
-		lineageTag: 735059b0-7e8a-4f8a-acf7-78a03f97daae
+		lineageTag: 8f810fcd-0636-5a87-b978-f1acecfe21f9
 
 	/// Change of Transactions (M) vs prior year.
 	measure 'Transactions (M) YoY %' = IF ( ISBLANK ( [Transactions (M) PY] ), BLANK (), DIVIDE ( [Transactions (M)] - [Transactions (M) PY], [Transactions (M) PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 02 Mobility
-		lineageTag: ebc61e13-18ab-4c73-b3b3-6e29b50b19ce
+		lineageTag: 540a2cef-06ba-537a-851f-3fb4163a9e22
 
 	/// Font colour for the change label.
 	measure 'Transactions (M) YoY % Colour' = IF ( [Transactions (M) YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: feff77c8-744d-436d-b9cf-d4c798354dfc
+		lineageTag: f7e3f3d0-d8b0-5a9a-8516-2cb2d1d9df31
 
 	/// Gross margin for the 10 best sites.
 	measure 'Site Margin Top 10' = IF ( RANKX ( ALLSELECTED ( dim_site[site_label] ), [Retail Gross Margin],, DESC ) <= 10, [Retail Gross Margin] )
 		formatString: $#,0
 		displayFolder: 02 Mobility
-		lineageTag: 91e7c86d-263e-44ce-afa7-c64159d1193b
+		lineageTag: 53391e19-d6a9-55c2-826f-e30e143444c1
+
+	/// Fuel volume of the 10 largest countries.
+	measure 'Fuel Volume Top 10' = IF ( RANKX ( ALLSELECTED ( dim_country[country_name] ), [Fuel Volume ML],, DESC ) <= 10, [Fuel Volume ML] )
+		formatString: #,0\ \M\L
+		displayFolder: 02 Mobility
+		lineageTag: 8d82f5ea-8a8d-558a-bdcf-26ea8cf57901
 
 	/// Barrels of oil equivalent produced.
 	measure 'Production boe' = SUM ( fact_production[total_boe] )
 		formatString: #,0
 		displayFolder: 03 Upstream
-		lineageTag: 68d2f18a-adf6-4314-84dc-c6f65d74532e
+		lineageTag: d76d76c7-5e92-55b4-b98b-c14f87dd0dd2
 
 	/// Calendar days covered by the monthly production rows.
 	measure 'Days Produced' = SUMX ( VALUES ( fact_production[date_key] ), CALCULATE ( MAX ( fact_production[days_in_month] ) ) )
 		formatString: #,0
 		displayFolder: 03 Upstream
-		lineageTag: c82c08a1-3d03-4686-a09a-fec39a20c282
+		lineageTag: 2fa9c388-0339-594d-8c42-3ba67259652f
 
 	/// Average production, thousand boe per day.
 	measure 'Production kboe/d' = DIVIDE ( [Production boe], [Days Produced] ) / 1000
 		formatString: #,0
 		displayFolder: 03 Upstream
-		lineageTag: 229dd6b4-c093-4e5b-8ac4-5a61a2da3a1c
+		lineageTag: 3a6189e2-8ba7-54a0-88c3-a0ff84e0f872
 
 	/// Production kboe/d in the same period of the prior year.
 	measure 'Production kboe/d PY' = CALCULATE ( [Production kboe/d], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: #,0
 		displayFolder: 03 Upstream
-		lineageTag: f4688c90-1c11-4626-ae9e-1c39bda6695c
+		lineageTag: f18a9ddf-6bd2-52be-ba9c-2d3817afe047
 
 	/// Change of Production kboe/d vs prior year.
 	measure 'Production kboe/d YoY %' = IF ( ISBLANK ( [Production kboe/d PY] ), BLANK (), DIVIDE ( [Production kboe/d] - [Production kboe/d PY], [Production kboe/d PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 03 Upstream
-		lineageTag: a9e113b6-b4e7-4698-b417-5ad10719db4f
+		lineageTag: 4827273e-9ac6-5a20-a84c-7a96f3ae2f4e
 
 	/// Font colour for the change label.
 	measure 'Production kboe/d YoY % Colour' = IF ( [Production kboe/d YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: 1505e8f5-1204-4624-bd94-c15e2c80a40c
+		lineageTag: 2d4fccff-905c-5878-9b49-c0b9ccb51dc7
 
 	/// Planned production, thousand boe per day.
 	measure 'Planned kboe/d' = DIVIDE ( SUM ( fact_production[planned_boe] ), [Days Produced] ) / 1000
 		formatString: #,0
 		displayFolder: 03 Upstream
-		lineageTag: 30803df9-85d6-46b3-88a7-260a68837cf5
+		lineageTag: ec3a4e47-1bfe-5b4b-bef1-6e6f81ee3852
 
 	/// Actual vs planned production.
 	measure 'Production vs Plan %' = IF ( ISBLANK ( [Planned kboe/d] ), BLANK (), DIVIDE ( [Production kboe/d], [Planned kboe/d] ) - 1 )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 03 Upstream
-		lineageTag: 37e6d3e3-6231-490f-811b-d39aa72d78ab
+		lineageTag: 6ea577c9-1a79-5bbb-9003-48bf35144f17
 
 	/// Font colour.
 	measure 'Production vs Plan % Colour' = IF ( [Production vs Plan %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: d00307e5-50ee-49ee-b901-f5b5c95edef1
+		lineageTag: 7aee1ce7-42df-53ac-a89e-641cd4407fb2
 
-	/// Production of the 12 largest assets.
-	measure 'Production Top 12' = IF ( RANKX ( ALLSELECTED ( dim_asset[asset_name] ), [Production kboe/d],, DESC ) <= 12, [Production kboe/d] )
+	/// Production of the 10 largest assets.
+	measure 'Production Top 10' = IF ( RANKX ( ALLSELECTED ( dim_asset[asset_name] ), [Production kboe/d],, DESC ) <= 10, [Production kboe/d] )
 		formatString: #,0
 		displayFolder: 03 Upstream
-		lineageTag: 7127c91b-cd42-47d7-8eb1-6388dfd7f5dc
+		lineageTag: 5a0f88e0-4077-5064-aa92-e4cf317052cb
 
 	/// Operating cost per barrel of oil equivalent, USD.
 	measure 'Opex per boe' = DIVIDE ( SUM ( fact_production[opex_usd] ), [Production boe] )
 		formatString: $#,0.00
 		displayFolder: 03 Upstream
-		lineageTag: c0aa9b05-9aee-4b98-a3e7-b9732f48f15d
+		lineageTag: e4e38e2f-9238-57d3-879b-406b774208e0
 
 	/// Opex per boe in the same period of the prior year.
 	measure 'Opex per boe PY' = CALCULATE ( [Opex per boe], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: $#,0.00
 		displayFolder: 03 Upstream
-		lineageTag: 7068ceed-e6c4-4975-8ab8-fd1087ff4950
+		lineageTag: 2bbec9c7-0138-584d-87e5-9cb47171b3e1
 
 	/// Change of Opex per boe vs prior year.
 	measure 'Opex per boe YoY %' = IF ( ISBLANK ( [Opex per boe PY] ), BLANK (), DIVIDE ( [Opex per boe] - [Opex per boe PY], [Opex per boe PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 03 Upstream
-		lineageTag: 77e1f7ac-be3b-43fe-984a-d939b34f2315
+		lineageTag: 6ad6488b-f6c1-5f53-80c8-c8f9dee88030
 
 	/// Font colour for the change label.
 	measure 'Opex per boe YoY % Colour' = IF ( [Opex per boe YoY %] >= 0, "#DD1D21", "#1E8E5A" )
 		displayFolder: 99 Formatting
-		lineageTag: 4c16b249-648a-42b7-bdfe-5b50bfb8b812
+		lineageTag: 0669b839-06b7-56db-8a4f-259b6bd9dc05
 
 	/// Share of hours the assets were running.
 	measure 'Asset Uptime' = 1 - DIVIDE ( SUM ( fact_production[downtime_hours] ), SUMX ( fact_production, 24 * fact_production[days_in_month] ) )
 		formatString: 0.0%
 		displayFolder: 03 Upstream
-		lineageTag: b052fe7b-b145-486a-aaad-db1d6552c9ac
+		lineageTag: 3947ae5f-0cd5-5bf0-a949-0cf778123fa7
 
 	/// Asset Uptime in the same period of the prior year.
 	measure 'Asset Uptime PY' = CALCULATE ( [Asset Uptime], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: 0.0%
 		displayFolder: 03 Upstream
-		lineageTag: e5f02a5d-94db-4ca3-a852-b7e43d5c676f
+		lineageTag: eb85685f-d115-5301-a51d-854d925e2de6
 
 	/// Change of Asset Uptime vs prior year in percentage points.
 	measure 'Asset Uptime vs PY' = IF ( ISBLANK ( [Asset Uptime PY] ), BLANK (), ( [Asset Uptime] - [Asset Uptime PY] ) * 100 )
 		formatString: +0.0 pp;-0.0 pp;0.0 pp
 		displayFolder: 03 Upstream
-		lineageTag: e882ed71-7aa9-48be-8ee9-2520fc3507bf
+		lineageTag: d16794ab-c7ae-558d-bda1-e2ddc434a4b0
 
 	/// Font colour for the change label.
 	measure 'Asset Uptime vs PY Colour' = IF ( [Asset Uptime vs PY] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: ac5a5689-1a83-4251-9bdc-e85deb4a0d7e
+		lineageTag: 2ada2922-43ac-5c7f-bf65-82391f8e33cc
 
 	/// Hours of asset downtime.
 	measure 'Downtime Hours' = SUM ( fact_asset_downtime[downtime_hours] )
 		formatString: #,0
 		displayFolder: 03 Upstream
-		lineageTag: cb87d50f-e302-429e-9b53-ee995ef3be68
+		lineageTag: f20b7c52-ee85-597a-af1b-5e09695ffff6
 
 	/// LNG sold in million tonnes.
 	measure 'LNG Sold Mt' = SUM ( fact_lng_sales[volume_mt] )
 		formatString: #,0.0\ \M\t
 		displayFolder: 03 Upstream
-		lineageTag: e950f7c8-e75a-4b94-ad3c-6ee85614e506
+		lineageTag: 904d7e79-f438-5c2d-b9a2-8959380de370
 
 	/// LNG Sold Mt in the same period of the prior year.
 	measure 'LNG Sold Mt PY' = CALCULATE ( [LNG Sold Mt], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: #,0.0\ \M\t
 		displayFolder: 03 Upstream
-		lineageTag: c012f312-47c5-4337-ad00-e9acf1dba277
+		lineageTag: 79b2dbf9-5138-5c1b-bb7e-9a6333871829
 
 	/// Change of LNG Sold Mt vs prior year.
 	measure 'LNG Sold Mt YoY %' = IF ( ISBLANK ( [LNG Sold Mt PY] ), BLANK (), DIVIDE ( [LNG Sold Mt] - [LNG Sold Mt PY], [LNG Sold Mt PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 03 Upstream
-		lineageTag: 76111851-7411-41a5-90f7-bce8967645fb
+		lineageTag: 421c554e-a04d-5a0d-b345-796facf0e416
 
 	/// Font colour for the change label.
 	measure 'LNG Sold Mt YoY % Colour' = IF ( [LNG Sold Mt YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: 912e512e-7842-4416-ad9d-ce57c458a46e
+		lineageTag: bd5c44a8-e869-5fd0-8233-56da6ce5acd4
 
 	/// Share of LNG sold on the spot market.
 	measure 'Spot LNG Share' = DIVIDE ( CALCULATE ( [LNG Sold Mt], fact_lng_sales[contract_type] = "Spot" ), [LNG Sold Mt] )
 		formatString: 0.0%
 		displayFolder: 03 Upstream
-		lineageTag: 628e4f29-461a-4321-99a5-6462325c5d70
+		lineageTag: 78f4e2aa-db4d-523b-8f97-c7fb76eb69fc
 
 	/// Spot LNG Share in the same period of the prior year.
 	measure 'Spot LNG Share PY' = CALCULATE ( [Spot LNG Share], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: 0.0%
 		displayFolder: 03 Upstream
-		lineageTag: c47a3842-13d6-4ca4-8f5c-37b84325d5ca
+		lineageTag: db58be45-a88d-5b6b-82f2-220b31a24c17
 
 	/// Change of Spot LNG Share vs prior year in percentage points.
 	measure 'Spot LNG Share vs PY' = IF ( ISBLANK ( [Spot LNG Share PY] ), BLANK (), ( [Spot LNG Share] - [Spot LNG Share PY] ) * 100 )
 		formatString: +0.0 pp;-0.0 pp;0.0 pp
 		displayFolder: 03 Upstream
-		lineageTag: b408ae48-6956-4142-819b-960dae9674bb
+		lineageTag: 9fd51545-c8c9-5003-82a9-89daafb05957
 
 	/// Font colour for the change label.
 	measure 'Spot LNG Share vs PY Colour' = IF ( [Spot LNG Share vs PY] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: b993a386-8298-4f85-b0fe-aa197b8ea101
+		lineageTag: f35e2490-26a5-5441-b2fb-4daf82571bd8
 
 	/// LNG revenue, USD.
 	measure 'LNG Revenue' = SUM ( fact_lng_sales[revenue_usd] )
 		formatString: $#,0
 		displayFolder: 03 Upstream
-		lineageTag: 6734bf0a-854f-4665-b76c-da28e429affa
+		lineageTag: 66d9dbb8-1a9e-525a-b32b-c692ad186799
 
 	/// Realised LNG price per MMBtu (1 Mt = 52 million MMBtu).
 	measure 'LNG Price USD/MMBtu' = DIVIDE ( [LNG Revenue], [LNG Sold Mt] * 52000000 )
 		formatString: $#,0.00
 		displayFolder: 03 Upstream
-		lineageTag: 912a2740-8ac3-4e2e-9e75-65e2e1339db5
+		lineageTag: 0df72bd4-c3e1-5843-9b8b-82bec1338669
 
 	/// LNG sold by destination country (inactive relationship).
 	measure 'LNG Sold by Destination' = CALCULATE ( [LNG Sold Mt], USERELATIONSHIP ( fact_lng_sales[destination_country_code], dim_country[country_code] ), CROSSFILTER ( fact_lng_sales[plant_asset_id], dim_asset[asset_id], None ) )
 		formatString: #,0.0\ \M\t
 		displayFolder: 03 Upstream
-		lineageTag: 295a72bf-d7c8-4cec-bae2-2d49ea87ce7d
+		lineageTag: 84500fa4-6d49-5884-8d40-49f9c26f2bdd
 
 	/// EV charge points installed at the end of the period.
 	measure 'EV Charge Points' = VAR d = MIN ( MAX ( dim_date[date] ), DATE ( [Last Data Year], 12, 31 ) ) RETURN SUMX ( FILTER ( dim_site, NOT ISBLANK ( dim_site[ev_since_date] ) && dim_site[ev_since_date] <= d ), dim_site[ev_charge_points] )
 		formatString: #,0
 		displayFolder: 04 Energy Transition
-		lineageTag: 6eec41aa-4ef8-4fd7-9883-f6ecb99ee241
+		lineageTag: 36fb7737-e01b-5452-a5c7-38bbc51aebd9
 
 	/// EV Charge Points in the same period of the prior year.
 	measure 'EV Charge Points PY' = CALCULATE ( [EV Charge Points], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: #,0
 		displayFolder: 04 Energy Transition
-		lineageTag: e1923f65-5958-4f7b-bc90-6435fcd119f1
+		lineageTag: 773093a5-8cf1-57d5-bd92-332165227faa
 
 	/// Change of EV Charge Points vs prior year.
 	measure 'EV Charge Points YoY %' = IF ( ISBLANK ( [EV Charge Points PY] ), BLANK (), DIVIDE ( [EV Charge Points] - [EV Charge Points PY], [EV Charge Points PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 04 Energy Transition
-		lineageTag: 21530c23-ff62-4db9-a301-0e6b6ef8fa56
+		lineageTag: 54f39e81-8389-5e5b-a86b-0659386782f3
 
 	/// Font colour for the change label.
 	measure 'EV Charge Points YoY % Colour' = IF ( [EV Charge Points YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: 108f91f1-4fbb-4c40-9041-863ee06db4e1
+		lineageTag: c99c6186-1b3e-510c-a713-2a305b8d9304
+
+	/// EV charge points of the 10 largest countries.
+	measure 'EV Charge Points Top 10' = IF ( RANKX ( ALLSELECTED ( dim_country[country_name] ), [EV Charge Points],, DESC ) <= 10, [EV Charge Points] )
+		formatString: #,0
+		displayFolder: 04 Energy Transition
+		lineageTag: 338a90ef-c707-5131-99be-52ac8489ad79
 
 	/// Share of sites with EV charging at the end of the period.
 	measure 'EV Hub Share' = VAR d = MIN ( MAX ( dim_date[date] ), DATE ( [Last Data Year], 12, 31 ) ) RETURN DIVIDE ( COUNTROWS ( FILTER ( dim_site, NOT ISBLANK ( dim_site[ev_since_date] ) && dim_site[ev_since_date] <= d ) ), COUNTROWS ( dim_site ) )
 		formatString: 0.0%
 		displayFolder: 04 Energy Transition
-		lineageTag: 824da316-c011-4017-a15f-c552c096c0c8
+		lineageTag: 6c9f0a37-9736-5dfe-a89e-649c6431cd52
 
 	/// EV charging sessions.
 	measure 'EV Sessions' = SUM ( fact_ev_charging[sessions] )
 		formatString: #,0
 		displayFolder: 04 Energy Transition
-		lineageTag: 13e6fdbc-72f5-4c44-ba25-e96a7f9a5d5b
+		lineageTag: 75ddde34-00eb-5527-988f-e89d67f4a927
 
 	/// EV charging sessions in millions.
 	measure 'EV Sessions (M)' = DIVIDE ( [EV Sessions], 1e6 )
 		formatString: #,0.00\M
 		displayFolder: 04 Energy Transition
-		lineageTag: a49fbe9d-b29f-47f2-91e7-c0a7cff21212
+		lineageTag: d914b1ba-4677-5255-9bb9-f5e9bd6b2c97
 
 	/// EV Sessions (M) in the same period of the prior year.
 	measure 'EV Sessions (M) PY' = CALCULATE ( [EV Sessions (M)], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: #,0.00\M
 		displayFolder: 04 Energy Transition
-		lineageTag: 74c3293e-1b9b-4908-bf29-69c57dfcef8e
+		lineageTag: 5685ff20-e304-525a-8ba7-3a7be5f47611
 
 	/// Change of EV Sessions (M) vs prior year.
 	measure 'EV Sessions (M) YoY %' = IF ( ISBLANK ( [EV Sessions (M) PY] ), BLANK (), DIVIDE ( [EV Sessions (M)] - [EV Sessions (M) PY], [EV Sessions (M) PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 04 Energy Transition
-		lineageTag: b247ea3b-90dc-4a78-be43-d4f7ccf82122
+		lineageTag: d8824500-2c98-52cb-a14c-b5db6e77eb80
 
 	/// Font colour for the change label.
 	measure 'EV Sessions (M) YoY % Colour' = IF ( [EV Sessions (M) YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: d77690d3-ae05-4978-afd3-30a63a77a019
+		lineageTag: e2d335d2-d2da-5ade-9f4d-49fd82f9a653
 
 	/// Electricity delivered to EVs, GWh.
 	measure 'Energy Delivered GWh' = DIVIDE ( SUM ( fact_ev_charging[energy_mwh] ), 1000 )
 		formatString: #,0.0\ \G\W\h
 		displayFolder: 04 Energy Transition
-		lineageTag: 2ec19ea5-ee09-4fa2-8071-c8a1ee5ea134
+		lineageTag: cbda82cd-59ef-5255-b338-75544679d7e8
 
 	/// Energy Delivered GWh in the same period of the prior year.
 	measure 'Energy Delivered GWh PY' = CALCULATE ( [Energy Delivered GWh], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: #,0.0\ \G\W\h
 		displayFolder: 04 Energy Transition
-		lineageTag: a3a7262b-ea29-4f8a-be26-41f6d5597420
+		lineageTag: 84d9fd40-f8e8-536c-9464-1cf72e7a8172
 
 	/// Change of Energy Delivered GWh vs prior year.
 	measure 'Energy Delivered GWh YoY %' = IF ( ISBLANK ( [Energy Delivered GWh PY] ), BLANK (), DIVIDE ( [Energy Delivered GWh] - [Energy Delivered GWh PY], [Energy Delivered GWh PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 04 Energy Transition
-		lineageTag: 3f51efc0-01dc-4aa2-aa44-001e269dfcb8
+		lineageTag: fb6af064-bf0d-59a9-b24d-441878310233
 
 	/// Font colour for the change label.
 	measure 'Energy Delivered GWh YoY % Colour' = IF ( [Energy Delivered GWh YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: b755fae1-60b1-47d1-b92b-9343cfdda8b2
+		lineageTag: 7ce24cff-b3fe-5697-8ebb-b5b40eb8eff6
 
 	/// Electricity delivered to EVs, MWh.
 	measure 'Energy Delivered MWh' = SUM ( fact_ev_charging[energy_mwh] )
 		formatString: #,0
 		displayFolder: 04 Energy Transition
-		lineageTag: da8430bf-4565-43a4-97c4-b6da0fe8e0b3
+		lineageTag: 73d0790e-22c9-538b-884c-1f39252ab6e0
 
 	/// EV charging revenue, USD.
 	measure 'EV Revenue' = SUM ( fact_ev_charging[revenue_usd] )
 		formatString: $#,0
 		displayFolder: 04 Energy Transition
-		lineageTag: 919c99bc-3f02-48ae-9817-917117d1b08c
+		lineageTag: 952680f9-2841-5bc7-909d-48855ab473aa
 
 	/// EV charging revenue in USD million.
 	measure 'EV Revenue ($m)' = DIVIDE ( [EV Revenue], 1e6 )
 		formatString: $#,0.0\m
 		displayFolder: 04 Energy Transition
-		lineageTag: 846aeb19-00b3-462d-bf51-95ea84fb7d4d
+		lineageTag: df944636-de2a-522d-bfe6-1198ffc11381
 
 	/// EV Revenue ($m) in the same period of the prior year.
 	measure 'EV Revenue ($m) PY' = CALCULATE ( [EV Revenue ($m)], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: $#,0.0\m
 		displayFolder: 04 Energy Transition
-		lineageTag: 8f93efec-ce9b-49b7-a60a-e6f7d161fdba
+		lineageTag: 51f295eb-bbc9-5cdc-bd42-532844517b63
 
 	/// Change of EV Revenue ($m) vs prior year.
 	measure 'EV Revenue ($m) YoY %' = IF ( ISBLANK ( [EV Revenue ($m) PY] ), BLANK (), DIVIDE ( [EV Revenue ($m)] - [EV Revenue ($m) PY], [EV Revenue ($m) PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 04 Energy Transition
-		lineageTag: faaf6b77-a33a-4739-aeed-9a11320ddf9c
+		lineageTag: 33462dde-3e14-5209-9216-5ebf24e23c1e
 
 	/// Font colour for the change label.
 	measure 'EV Revenue ($m) YoY % Colour' = IF ( [EV Revenue ($m) YoY %] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: d2695bc4-e6f0-4f6c-93c7-403056df52ff
+		lineageTag: d93cebb0-86b6-538e-a7ba-70293b879418
 
 	/// Renewables & Energy Solutions revenue plus EV charging revenue as a share of group revenue.
 	measure 'Low-Carbon Revenue Share' = DIVIDE ( CALCULATE ( [Revenue], dim_segment[is_low_carbon] = TRUE () ) + [EV Revenue], [Revenue] )
 		formatString: 0.0%
 		displayFolder: 04 Energy Transition
-		lineageTag: 345586c6-6c8f-4345-899b-b2533697dc7b
+		lineageTag: cc450979-6173-5155-9f42-32ae753715d4
 
 	/// Low-Carbon Revenue Share in the same period of the prior year.
 	measure 'Low-Carbon Revenue Share PY' = CALCULATE ( [Low-Carbon Revenue Share], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: 0.0%
 		displayFolder: 04 Energy Transition
-		lineageTag: 5069aa65-7856-441a-b8c0-a39cf9e2552d
+		lineageTag: eaa5b4dd-6543-5cb4-92bd-0776ead3c7c3
 
 	/// Change of Low-Carbon Revenue Share vs prior year in percentage points.
 	measure 'Low-Carbon Revenue Share vs PY' = IF ( ISBLANK ( [Low-Carbon Revenue Share PY] ), BLANK (), ( [Low-Carbon Revenue Share] - [Low-Carbon Revenue Share PY] ) * 100 )
 		formatString: +0.0 pp;-0.0 pp;0.0 pp
 		displayFolder: 04 Energy Transition
-		lineageTag: ddd2af28-c9a4-43d9-a1c2-41c3a292ae8e
+		lineageTag: 6ed1a727-37d4-5b91-bbeb-85bbb1d35689
 
 	/// Font colour for the change label.
 	measure 'Low-Carbon Revenue Share vs PY Colour' = IF ( [Low-Carbon Revenue Share vs PY] >= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: 24207bbd-276c-42ae-8c9e-4cf640689fa4
+		lineageTag: f3034b4d-1525-56e6-8cab-96a5a0823cd0
 
 	/// Business target for the low-carbon revenue share.
 	measure 'Low-Carbon Share Target' = DIVIDE ( CALCULATE ( SUM ( fact_targets[target_value] ), fact_targets[metric] = "Low-carbon revenue share", TREATAS ( VALUES ( dim_date[year] ), fact_targets[target_year] ) ), 100 )
 		formatString: 0.0%
 		displayFolder: 04 Energy Transition
-		lineageTag: 765f9564-796c-4353-8ef3-61ffbdaf9142
+		lineageTag: e8481f8d-28d7-5cdf-ad88-0825a5414ea0
 
 	/// Greenhouse gas emissions, MtCO2e.
 	measure 'Emissions Mt' = DIVIDE ( SUM ( fact_emissions[tco2e] ), 1e6 )
 		formatString: #,0.0\ \M\t
 		displayFolder: 04 Energy Transition
-		lineageTag: bc9837c9-2021-4f25-a59c-85056dab130a
+		lineageTag: d547ee01-1e81-50f3-8610-5b24869138fa
 
 	/// Operational emissions (Scope 1 and 2), MtCO2e.
 	measure 'Scope 1+2 Mt' = DIVIDE ( CALCULATE ( SUM ( fact_emissions[tco2e] ), fact_emissions[scope] IN { 1, 2 } ), 1e6 )
 		formatString: #,0.0\ \M\t
 		displayFolder: 04 Energy Transition
-		lineageTag: 6aedafa2-0d40-464b-8adb-b1aa3bf52056
+		lineageTag: 464b14d9-e736-51ec-9454-cebd1e1c3595
 
 	/// Scope 1+2 Mt in the same period of the prior year.
 	measure 'Scope 1+2 Mt PY' = CALCULATE ( [Scope 1+2 Mt], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: #,0.0\ \M\t
 		displayFolder: 04 Energy Transition
-		lineageTag: ff151651-9685-487c-aa8d-272034aa6f8b
+		lineageTag: 3b1fe892-6328-5e5e-a441-cfd90d2cac82
 
 	/// Change of Scope 1+2 Mt vs prior year.
 	measure 'Scope 1+2 Mt YoY %' = IF ( ISBLANK ( [Scope 1+2 Mt PY] ), BLANK (), DIVIDE ( [Scope 1+2 Mt] - [Scope 1+2 Mt PY], [Scope 1+2 Mt PY] ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 04 Energy Transition
-		lineageTag: d7ca7451-7219-43d6-a9c1-833dfd293f43
+		lineageTag: d0cdae94-c04e-547c-a591-788f6bdcb538
 
 	/// Font colour for the change label.
 	measure 'Scope 1+2 Mt YoY % Colour' = IF ( [Scope 1+2 Mt YoY %] >= 0, "#DD1D21", "#1E8E5A" )
 		displayFolder: 99 Formatting
-		lineageTag: 92cfb649-70af-47ca-915f-2f7c638dda47
+		lineageTag: 8d517f5d-da0b-5765-a821-50418dc7469f
 
 	/// Emissions from use of sold products (Scope 3), MtCO2e.
 	measure 'Scope 3 Mt' = DIVIDE ( CALCULATE ( SUM ( fact_emissions[tco2e] ), fact_emissions[scope] = 3 ), 1e6 )
 		formatString: #,0.0\ \M\t
 		displayFolder: 04 Energy Transition
-		lineageTag: ec6212ce-6e80-456b-8c3f-512f0b6568bb
+		lineageTag: 0c07443f-30da-5179-a51c-ad6245ca2f34
 
 	/// Scope 1+2 target path to 2030 (50% below 2016).
 	measure 'Scope 1+2 Target Mt' = CALCULATE ( SUM ( fact_targets[target_value] ), fact_targets[metric] = "Scope 1+2 emissions", TREATAS ( VALUES ( dim_date[year] ), fact_targets[target_year] ) )
 		formatString: #,0.0\ \M\t
 		displayFolder: 04 Energy Transition
-		lineageTag: f7ffb299-df1a-4133-b693-a81f7df50d0f
+		lineageTag: d2603711-4c4d-58ba-9c57-a868f038614c
 
 	/// Scope 1+2 emissions of the selected year vs 2020.
 	measure 'Scope 1+2 vs 2020' = VAR y = [Selected Year] VAR cur = CALCULATE ( [Scope 1+2 Mt], REMOVEFILTERS ( dim_date ), dim_date[year] = y ) VAR base = CALCULATE ( [Scope 1+2 Mt], REMOVEFILTERS ( dim_date ), dim_date[year] = 2020 ) RETURN DIVIDE ( cur - base, base )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 04 Energy Transition
-		lineageTag: efc32790-d73e-4fa3-92dd-539b117dad3e
+		lineageTag: a72b3145-ee89-59c3-9ef9-ff0ad9a490e9
 
 	/// Font colour.
 	measure 'Scope 1+2 vs 2020 Colour' = IF ( [Scope 1+2 vs 2020] <= 0, "#1E8E5A", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: c162a284-8dfa-4896-821d-898a54487ddd
+		lineageTag: 6105877b-d7ad-53c6-915f-057de7bc84a6
 
 	/// Target for the selected year.
 	measure 'Target Value' = VAR y = [Selected Year] RETURN CALCULATE ( SUM ( fact_targets[target_value] ), fact_targets[target_year] = y )
 		formatString: #,0.0
 		displayFolder: 05 Targets
-		lineageTag: e456944a-2293-4568-9740-aa78c972e323
+		lineageTag: ba7ccfe2-30da-501b-9bd5-b9af30d6b68f
 
 	/// Actual value of the target metric in the selected year.
 	measure 'Actual Value' = VAR m = SELECTEDVALUE ( fact_targets[metric] ) VAR y = [Selected Year] RETURN CALCULATE ( SWITCH ( m, "Production", [Production kboe/d], "Scope 1+2 emissions", [Scope 1+2 Mt], "Fuel volume", [Fuel Volume ML], "EV charge points", [EV Charge Points], "Low-carbon revenue share", [Low-Carbon Revenue Share] * 100 ), REMOVEFILTERS ( dim_date ), dim_date[year] = y )
 		formatString: #,0.0
 		displayFolder: 05 Targets
-		lineageTag: 85dfe5c4-f831-43a2-893d-2c569ed7c394
+		lineageTag: cea84bd7-c1f6-5127-b82f-1e6a8dc77c2e
 
 	/// Actual vs target (for emissions, lower is better).
 	measure 'Target Achievement' = VAR m = SELECTEDVALUE ( fact_targets[metric] ) RETURN IF ( m = "Scope 1+2 emissions", DIVIDE ( [Target Value], [Actual Value] ), DIVIDE ( [Actual Value], [Target Value] ) )
 		formatString: 0%
 		displayFolder: 05 Targets
-		lineageTag: 18583a91-0ff7-4be5-9b73-c1208fae156d
+		lineageTag: f8805b08-7974-5d87-9815-e44a47a68f69
 
 	/// Status label.
 	measure 'Target Status' = IF ( ISBLANK ( [Target Achievement] ), BLANK (), IF ( [Target Achievement] >= 1, "On track", IF ( [Target Achievement] >= 0.95, "Close", "Behind" ) ) )
 		displayFolder: 05 Targets
-		lineageTag: df93a7cc-e446-464d-8ca3-279c8772bd1f
+		lineageTag: 427fa16d-bb92-5323-be79-c4173c259665
 
 	/// Font colour.
 	measure 'Target Status Colour' = SWITCH ( TRUE (), [Target Achievement] >= 1, "#1E8E5A", [Target Achievement] >= 0.95, "#EB8705", "#DD1D21" )
 		displayFolder: 99 Formatting
-		lineageTag: cd688bbf-7b75-4bd8-a31c-3ca9433e13b5
+		lineageTag: 17544db4-9dcf-50f7-a218-fdf8434b178a
 
 	/// Actual with unit.
 	measure 'Actual' = VAR m = SELECTEDVALUE ( fact_targets[metric] ) VAR v = [Actual Value] RETURN SWITCH ( m, "Production", FORMAT ( v, "#,0" ) & " kboe/d", "Scope 1+2 emissions", FORMAT ( v, "0.0" ) & " Mt", "Fuel volume", FORMAT ( v, "#,0" ) & " ML", "EV charge points", FORMAT ( v, "#,0" ), "Low-carbon revenue share", FORMAT ( v, "0.0" ) & "%" )
 		displayFolder: 05 Targets
-		lineageTag: a09f6f6d-b04e-4719-a1c2-6deed2bb9555
+		lineageTag: b5aed92b-3a80-551b-916e-faf407b1b3f1
 
 	/// Target with unit.
 	measure 'Target' = VAR m = SELECTEDVALUE ( fact_targets[metric] ) VAR v = [Target Value] RETURN SWITCH ( m, "Production", FORMAT ( v, "#,0" ) & " kboe/d", "Scope 1+2 emissions", FORMAT ( v, "0.0" ) & " Mt", "Fuel volume", FORMAT ( v, "#,0" ) & " ML", "EV charge points", FORMAT ( v, "#,0" ), "Low-carbon revenue share", FORMAT ( v, "0.0" ) & "%" )
 		displayFolder: 05 Targets
-		lineageTag: 79874e5f-5d73-4b99-bc7b-5a393fab1541
+		lineageTag: dace064e-8873-59e0-90cb-64aa37fdc1b0
 
 	/// Runs of the Fabric pipeline (manual test runs excluded).
 	measure 'Pipeline Runs' = CALCULATE ( DISTINCTCOUNT ( vw_pipeline_runs[pipeline_run_id] ), LEFT ( vw_pipeline_runs[pipeline_run_id], 6 ) <> "manual" )
 		formatString: #,0
 		displayFolder: 06 Pipeline
-		lineageTag: 1dfebe34-7fa4-4bde-ba2c-f7f3ec6bbf8c
+		lineageTag: e0f2582a-fcc1-536f-a5db-3b5ca59b55fd
 
 	/// Rows copied into bronze in the latest run.
 	measure 'Rows Landed' = CALCULATE ( SUM ( vw_pipeline_runs[rows_read] ), vw_pipeline_runs[step] = "bronze", vw_pipeline_runs[is_latest_run] = TRUE () )
 		formatString: #,0
 		displayFolder: 06 Pipeline
-		lineageTag: 50014ea8-68c9-47aa-b788-8d9cbf8034ac
+		lineageTag: 40e2e73e-a4b9-557e-85ff-6badebea1337
 
 	/// Rows validated in silver in the latest run.
 	measure 'Silver Rows Read' = CALCULATE ( SUM ( vw_pipeline_runs[rows_read] ), vw_pipeline_runs[step] = "silver", vw_pipeline_runs[is_latest_run] = TRUE () )
 		formatString: #,0
 		displayFolder: 06 Pipeline
-		lineageTag: 15c54602-31dd-48d3-91e2-348e31fde9f7
+		lineageTag: 3dc9b508-793a-5563-91ed-6a699f1726fd
 
 	/// Rows rejected by silver validation in the latest run.
 	measure 'Rows Rejected' = CALCULATE ( SUM ( vw_pipeline_runs[rows_rejected] ), vw_pipeline_runs[step] = "silver", vw_pipeline_runs[is_latest_run] = TRUE () )
 		formatString: #,0
 		displayFolder: 06 Pipeline
-		lineageTag: f919c159-1708-4ccc-91f9-9cc1e74873d5
+		lineageTag: 73513d84-6181-5a68-92e0-8b4a046ba8dd
 
 	/// Rows that passed validation (before deduplication).
 	measure 'Rows Passed Validation' = [Silver Rows Read] - [Rows Rejected]
 		formatString: #,0
 		displayFolder: 06 Pipeline
-		lineageTag: deff1b5e-7ccd-4fe5-a68d-c0bf9465dbef
+		lineageTag: 22003379-a13c-5359-bb3a-a73655345b67
 
 	/// Rejected rows as a share of rows validated.
 	measure 'Reject Rate' = DIVIDE ( [Rows Rejected], [Silver Rows Read] )
 		formatString: 0.00%
 		displayFolder: 06 Pipeline
-		lineageTag: a93064a8-80cc-497b-8a75-5eb319482eeb
+		lineageTag: 1a030c8c-c753-5eae-a924-58a2d98511d5
 
 	/// Data quality checks in the latest run.
 	measure 'DQ Checks Total' = CALCULATE ( COUNTROWS ( vw_dq_results ), vw_dq_results[is_latest_run] = TRUE () )
 		formatString: #,0
 		displayFolder: 06 Pipeline
-		lineageTag: e83983f2-b11f-4ce6-a848-e2cfb2bbf34e
+		lineageTag: c98b0b32-1f3c-56c7-82c7-3e4790a6a0ec
 
 	/// Failed checks in the latest run.
 	measure 'DQ Checks Failed' = CALCULATE ( COUNTROWS ( vw_dq_results ), vw_dq_results[is_latest_run] = TRUE (), vw_dq_results[passed] = FALSE () ) + 0
 		formatString: #,0
 		displayFolder: 06 Pipeline
-		lineageTag: 7168b5f1-a663-410d-aefb-b5b460a81194
+		lineageTag: d1de17b1-50ce-5ec2-9be0-924f317cbcbd
 
 	/// Passed vs total checks in the latest run.
 	measure 'DQ Checks Passed' = FORMAT ( [DQ Checks Total] - [DQ Checks Failed], "0" ) & " / " & FORMAT ( [DQ Checks Total], "0" )
 		displayFolder: 06 Pipeline
-		lineageTag: c4e5f8e4-0be9-4c2e-8ec5-152c34ad376f
+		lineageTag: 0c53c636-2601-571c-8421-02e60a7e2003
 
 	/// Font colour.
 	measure 'DQ Failed Colour' = IF ( [DQ Checks Failed] > 0, "#EB8705", "#1E8E5A" )
 		displayFolder: 99 Formatting
-		lineageTag: db48921f-a18e-4ef7-a9df-3a622ca1520c
+		lineageTag: f7bbfac4-7529-5202-845b-eae180ad9697
 
 	/// Time from the first to the last logged step of the latest run.
 	measure 'Last Run Duration' = VAR s = CALCULATE ( MIN ( vw_pipeline_runs[started_at] ), vw_pipeline_runs[is_latest_run] = TRUE () ) VAR e = CALCULATE ( MAX ( vw_pipeline_runs[ended_at] ), vw_pipeline_runs[is_latest_run] = TRUE () ) VAR sec = DATEDIFF ( s, e, SECOND ) RETURN INT ( sec / 60 ) & " min " & FORMAT ( MOD ( sec, 60 ), "00" ) & " s"
 		displayFolder: 06 Pipeline
-		lineageTag: 6ef0a1d6-69cf-44a8-a811-02e0f701ff65
+		lineageTag: 30688f3b-0585-592e-8a05-7039c8af9b29
 
 	/// Rejected rows by reason in the latest run.
 	measure 'Rejected Rows (latest)' = CALCULATE ( SUM ( vw_rejections[rejected_rows] ), vw_rejections[is_latest_run] = TRUE () )
 		formatString: #,0
 		displayFolder: 06 Pipeline
-		lineageTag: c013aa64-551e-48d4-ab6c-0ac245d1db88
+		lineageTag: fa2399bf-72db-511f-ba1e-0427c4f466f8
 
 	partition _Measures = m
 		mode: import

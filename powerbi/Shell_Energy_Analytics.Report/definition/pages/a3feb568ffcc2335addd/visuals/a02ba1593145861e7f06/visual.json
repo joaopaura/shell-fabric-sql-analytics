@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "EV Charge Points"
+                  "Property": "EV Charge Points Top 10"
                 }
               },
-              "queryRef": "_Measures.EV Charge Points",
-              "nativeQueryRef": "EV Charge Points"
+              "queryRef": "_Measures.EV Charge Points Top 10",
+              "nativeQueryRef": "EV Charge Points Top 10"
             }
           ]
         },
@@ -79,7 +79,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "EV Charge Points"
+                "Property": "EV Charge Points Top 10"
               }
             },
             "direction": "Descending"
@@ -128,7 +128,7 @@
             "position": {
               "expr": {
                 "Literal": {
-                  "Value": "'TopLeft'"
+                  "Value": "'Top'"
                 }
               }
             }
@@ -151,7 +151,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.EV Charge Points"
+            "metadata": "_Measures.EV Charge Points Top 10"
           }
         }
       ]

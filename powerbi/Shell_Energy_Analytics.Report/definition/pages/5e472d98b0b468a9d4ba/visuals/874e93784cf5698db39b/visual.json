@@ -221,6 +221,21 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "valueDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.LNG Sold Mt",
+            "id": "field-fa97fb1c-0000-0000-0000-5be3e4fa1942"
+          }
         }
       ]
     },

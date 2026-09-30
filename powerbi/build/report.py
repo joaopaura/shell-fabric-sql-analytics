@@ -72,7 +72,8 @@ def card(pg, x, y, w, h, m, ref=None, ref_title="vs PY", ref_colour=None, value_
                                   "selector": {"data": [{"dataViewWildcard": {"matchingOption": 0}}], "metadata": mm, "id": rid, "order": 0}}]
         obj["referenceLabelTitle"] = [{"properties": {"titleContentType": lit("'custom'"), "titleText": lit(f"'{ref_title}'")},
                                        "selector": {"metadata": mm, "id": rid}}]
-        obj["referenceLabelValue"] = [{"properties": {"valueFontSize": lit("10D"), "valueFontColor": col_(GREY)}, "selector": {"id": "default"}}]
+        obj["referenceLabelValue"] = [{"properties": {"valueFontSize": lit("10D"), "valueFontColor": col_(GREY)}, "selector": {"id": "default"}},
+                                      {"properties": {"valueDisplayUnits": lit("1D")}, "selector": {"metadata": mm, "id": rid}}]
         if ref_colour:
             obj["referenceLabelValue"].insert(0, {"properties": {"valueFontColor": colm(ref_colour)},
                                                   "selector": {"data": [{"dataViewWildcard": {"matchingOption": 0}}], "metadata": mm, "id": rid}})
@@ -120,7 +121,8 @@ def nav_button(pg, x, y, w, h, target_id, label, hover=True):
 
 
 def chart(pg, vtype, x, y, w, h, cat, ys, series=None, y2=None, tooltips=None, colours=None, sort=None,
-          labels=True, value_axis=False, categorical=False, legend=True, label_units=None, extra=None, name=None):
+          labels=True, value_axis=False, categorical=False, legend=True, label_units=None, extra=None, name=None,
+          hide_labels=(), precision=None):
     qs = {"Category": {"projections": [proj(cat, True)]}, "Y": {"projections": [proj(f) for f in ys]}}
     if series:
         qs["Series"] = {"projections": [proj(series)]}
@@ -135,7 +137,11 @@ def chart(pg, vtype, x, y, w, h, cat, ys, series=None, y2=None, tooltips=None, c
         q["sortDefinition"] = {"sort": [{"field": F(cat), "direction": "Ascending"}]}
     obj = {"labels": [{"properties": {"show": lit("true" if labels else "false")}}],
            "valueAxis": [{"properties": {"show": lit("true" if value_axis else "false")}}],
-           "legend": [{"properties": {"show": lit("true" if legend else "false"), "position": lit("'TopLeft'")}}]}
+           "legend": [{"properties": {"show": lit("true" if legend else "false"), "position": lit("'Top'")}}]}
+    for hl in hide_labels:
+        obj["labels"].append({"properties": {"showSeries": lit("false")}, "selector": {"metadata": qref(hl)}})
+    if precision is not None:
+        obj["labels"][0]["properties"]["labelPrecision"] = lit(f"{precision}L")
     if label_units:
         obj["labels"][0]["properties"]["labelDisplayUnits"] = lit(label_units)
     if categorical:
@@ -154,19 +160,25 @@ def chart(pg, vtype, x, y, w, h, cat, ys, series=None, y2=None, tooltips=None, c
     return pg.add(name or f"{vtype} {cat}", x, y, w, h, {"visualType": vtype, "query": q, "objects": obj})
 
 
-def table(pg, x, y, w, h, fields, headers, latest_entity=None):
+def table(pg, x, y, w, h, fields, headers, latest_entity=None, where=None, font=11):
     projs = []
     for f, hdr in zip(fields, headers):
         p = proj(f)
         p["displayName"] = hdr
         projs.append(p)
     v = {"visualType": "tableEx", "query": {"queryState": {"Values": {"projections": projs}}},
-         "objects": {"columnHeaders": [{"properties": {"fontSize": lit("10D")}}], "values": [{"properties": {"fontSize": lit("10D")}}]}}
+         "objects": {"columnHeaders": [{"properties": {"fontSize": lit(f"{font}D")}}], "values": [{"properties": {"fontSize": lit(f"{font}D")}}],
+                     "total": [{"properties": {"totals": lit("false")}}]}}
     if latest_entity:
         v["filterConfig"] = {"filters": [{"name": hid("latest", pg.key, latest_entity), "field": C(latest_entity, "is_latest_run"), "type": "Categorical",
             "filter": {"Version": 2, "From": [{"Name": "t", "Entity": latest_entity, "Type": 0}],
                        "Where": [{"Condition": {"In": {"Expressions": [{"Column": {"Expression": {"SourceRef": {"Source": "t"}}, "Property": "is_latest_run"}}],
                                                        "Values": [[{"Literal": {"Value": "true"}}]]}}}]}}]}
+    for e, c, val in (where or []):
+        v.setdefault("filterConfig", {"filters": []})["filters"].append({"name": hid("where", pg.key, e, c), "field": C(e, c), "type": "Categorical",
+            "filter": {"Version": 2, "From": [{"Name": "w", "Entity": e, "Type": 0}],
+                       "Where": [{"Condition": {"In": {"Expressions": [{"Column": {"Expression": {"SourceRef": {"Source": "w"}}, "Property": c}}],
+                                                       "Values": [[{"Literal": {"Value": val}}]]}}}]}})
     return pg.add("Table", x, y, w, h, v)
 
 
@@ -176,10 +188,9 @@ def azure_map(pg, x, y, w, h):
                                                "queryRef": "Sum(dim_site.longitude)", "nativeQueryRef": "longitude"}]},
                         "Y": {"projections": [{"field": {"Aggregation": {"Expression": C("dim_site", "latitude"), "Function": 0}},
                                                "queryRef": "Sum(dim_site.latitude)", "nativeQueryRef": "latitude"}]},
-                        "Size": {"projections": [proj("[Fuel Volume ML]")]},
-                        "Tooltips": {"projections": [proj("[Retail Gross Margin]"), proj("[Margin per Litre]")]}}}
+                        "Tooltips": {"projections": [proj("[Fuel Volume ML]"), proj("[Retail Gross Margin]"), proj("[Margin per Litre]")]}}}
     obj = {"mapControls": [{"properties": {"autoZoom": lit("true"), "showNavigationControls": lit("false"), "showStylePicker": lit("false")}}],
-           "bubbleLayer": [{"properties": {"bubbleStrokeWidth": lit("0L")}}],
+           "bubbleLayer": [{"properties": {"bubbleRadius": lit("4L"), "bubbleStrokeWidth": lit("0L")}}],
            "dataPoint": [{"properties": {"fill": col_(RED)}}],
            "legend": [{"properties": {"show": lit("false")}}]}
     return pg.add("Map sites", x, y, w, h, {"visualType": "azureMap", "query": q, "objects": obj})
@@ -234,7 +245,7 @@ REGION = ("dim_country.region",)
 
 # ------------------------------------------------------------------ Home
 pg = P["home"]
-for i, (m, ref, title, rc) in enumerate([("Rows Landed", None, None, None), ("Rows Rejected", "Reject Rate", "reject rate", "Neutral Colour"),
+for i, (m, ref, title, rc) in enumerate([("Rows Landed", None, None, None), ("Rows Rejected", None, None, None),
                                           ("DQ Checks Passed", "DQ Checks Failed", "failed", "DQ Failed Colour")]):
     card(pg, 48 + i * 364 + 14, 540, 312, 92, m, ref, title, rc, size=40)
 for i, p in enumerate(PAGES[1:]):
@@ -250,16 +261,16 @@ kpis(pg, [("Revenue ($bn)", "Revenue YoY %", None, "Revenue YoY % Colour"),
           ("Fuel Volume ML", "Fuel Volume ML YoY %", None, "Fuel Volume ML YoY % Colour"),
           ("Scope 1+2 Mt", "Scope 1+2 Mt YoY %", None, "Scope 1+2 Mt YoY % Colour")])
 trend = chart(pg, "lineClusteredColumnComboChart", *inner((TWO[0][0], ROW2_Y, TWO[0][1], ROW2_H)), "dim_date.year",
-              ["[Revenue ($bn)]", "[EBITDA ($bn)]"], y2=["[EBITDA Margin]"], categorical=True, sort="cat",
+              ["[Revenue ($bn)]", "[EBITDA ($bn)]"], y2=["[EBITDA Margin]"], categorical=True, sort="cat", hide_labels=["[EBITDA ($bn)]"],
               colours={"[Revenue ($bn)]": RED, "[EBITDA ($bn)]": YEL, "[EBITDA Margin]": GREY})
 chart(pg, "clusteredBarChart", *inner((TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H)), "dim_segment.segment_name", ["[Revenue Share %]"],
       tooltips=["[Revenue ($bn)]", "[EBITDA Margin]"], sort="desc", legend=False,
       colours={f"dim_segment.segment_name='{s}'": c for s, c in [("Upstream", RED), ("Integrated Gas", YEL), ("Mobility", ORANGE),
                                                                  ("Chemicals & Products", GREY), ("Renewables & Energy Solutions", GREEN)]})
 chart(pg, "clusteredBarChart", *inner((TWO[0][0], ROW3_Y, TWO[0][1], ROW3_H)), "dim_country.country_name", ["[EBITDA Top 10]"],
-      tooltips=["[Revenue]", "[EBITDA Margin]"], sort="desc", legend=False, colours={"[EBITDA Top 10]": RED}, label_units="1000000000D")
+      tooltips=["[Revenue]", "[EBITDA Margin]"], sort="desc", legend=False, colours={"[EBITDA Top 10]": RED}, label_units="1000000000D", precision=1)
 table(pg, *inner((TWO[1][0], ROW3_Y, TWO[1][1], ROW3_H)), ["fact_targets.metric", "[Actual]", "[Target]", "[Target Achievement]", "[Target Status]"],
-      ["Metric", "Actual", "Target", "Achievement", "Status"])
+      ["Metric", "Actual", "Target", "Achievement", "Status"], font=13)
 no_filter(pg, sl[:1], [trend])
 
 # ------------------------------------------------------------------ Mobility
@@ -278,8 +289,8 @@ chart(pg, "clusteredBarChart", *inner((THREE[0][0], ROW3_Y, THREE[0][1], ROW3_H)
       tooltips=["[Margin per Litre]"], sort="desc", legend=False, label_units="1000000D",
       colours={f"dim_product.product_name='{p}'": c for p, c in [("Unleaded 95", RED), ("Diesel", RED), ("V-Power", RED), ("LPG", RED),
                                                                  ("Shop", YEL), ("Car Wash", YEL)]})
-chart(pg, "clusteredBarChart", *inner((THREE[1][0], ROW3_Y, THREE[1][1], ROW3_H)), "dim_country.country_name", ["[Fuel Volume ML]"],
-      tooltips=["[Fuel Volume ML YoY %]"], sort="desc", legend=False, colours={"[Fuel Volume ML]": RED})
+chart(pg, "clusteredBarChart", *inner((THREE[1][0], ROW3_Y, THREE[1][1], ROW3_H)), "dim_country.country_name", ["[Fuel Volume Top 10]"],
+      tooltips=["[Fuel Volume ML YoY %]"], sort="desc", legend=False, colours={"[Fuel Volume Top 10]": RED})
 chart(pg, "clusteredBarChart", *inner((THREE[2][0], ROW3_Y, THREE[2][1], ROW3_H)), "dim_site.site_label", ["[Site Margin Top 10]"],
       tooltips=["[Fuel Volume ML]"], sort="desc", legend=False, colours={"[Site Margin Top 10]": YEL}, label_units="1000000D")
 
@@ -294,8 +305,8 @@ kpis(pg, [("Production kboe/d", "Production kboe/d YoY %", None, "Production kbo
           ("Spot LNG Share", "Spot LNG Share vs PY", None, "Neutral Colour")])
 chart(pg, "lineChart", *inner((TWO[0][0], ROW2_Y, TWO[0][1], ROW2_H)), "dim_date.month_start", ["[Production kboe/d]", "[Planned kboe/d]"],
       labels=False, value_axis=True, colours={"[Production kboe/d]": RED, "[Planned kboe/d]": LGREY}, sort="cat")
-chart(pg, "clusteredBarChart", *inner((TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H)), "dim_asset.asset_name", ["[Production Top 12]"],
-      tooltips=["[Production vs Plan %]", "[Asset Uptime]"], sort="desc", legend=False, colours={"[Production Top 12]": RED})
+chart(pg, "clusteredBarChart", *inner((TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H)), "dim_asset.asset_name", ["[Production Top 10]"],
+      tooltips=["[Production vs Plan %]", "[Asset Uptime]"], sort="desc", legend=False, colours={"[Production Top 10]": RED})
 dt = chart(pg, "columnChart", *inner((THREE[0][0], ROW3_Y, THREE[0][1], ROW3_H)), "dim_date.year", ["[Downtime Hours]"], series="fact_asset_downtime.cause",
            categorical=True, sort="cat", labels=False, value_axis=True,
            colours={f"fact_asset_downtime.cause='{c}'": v for c, v in [("Planned maintenance", LGREY), ("Unplanned", RED), ("Weather", TEAL), ("Third party", YEL)]})
@@ -320,15 +331,15 @@ ev = chart(pg, "lineClusteredColumnComboChart", *inner((TWO[0][0], ROW2_Y, TWO[0
            y2=["[Energy Delivered MWh]"], labels=False, value_axis=True, sort="cat",
            colours={"[EV Sessions]": YEL, "[Energy Delivered MWh]": GREEN})
 em = chart(pg, "lineChart", *inner((TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H)), "dim_date.year", ["[Scope 1+2 Mt]", "[Scope 1+2 Target Mt]"],
-           categorical=True, sort="cat", colours={"[Scope 1+2 Mt]": RED, "[Scope 1+2 Target Mt]": LGREY},
+           categorical=True, sort="cat", colours={"[Scope 1+2 Mt]": RED, "[Scope 1+2 Target Mt]": LGREY}, hide_labels=["[Scope 1+2 Target Mt]"],
            extra={"lineStyles": [{"properties": {"lineStyle": lit("'dashed'")}, "selector": {"metadata": "_Measures.Scope 1+2 Target Mt"}}]})
 chart(pg, "clusteredBarChart", *inner((THREE[0][0], ROW3_Y, THREE[0][1], ROW3_H)), "fact_emissions.scope_label", ["[Emissions Mt]"], sort="cat",
       legend=False, colours={"fact_emissions.scope_label='Scope 1'": RED, "fact_emissions.scope_label='Scope 2'": ORANGE,
                              "fact_emissions.scope_label='Scope 3'": LGREY})
-chart(pg, "clusteredBarChart", *inner((THREE[1][0], ROW3_Y, THREE[1][1], ROW3_H)), "dim_country.country_name", ["[EV Charge Points]"],
-      tooltips=["[EV Hub Share]"], sort="desc", legend=False, colours={"[EV Charge Points]": GREEN})
+chart(pg, "clusteredBarChart", *inner((THREE[1][0], ROW3_Y, THREE[1][1], ROW3_H)), "dim_country.country_name", ["[EV Charge Points Top 10]"],
+      tooltips=["[EV Hub Share]"], sort="desc", legend=False, colours={"[EV Charge Points Top 10]": GREEN})
 lc = chart(pg, "lineChart", *inner((THREE[2][0], ROW3_Y, THREE[2][1], ROW3_H)), "dim_date.year", ["[Low-Carbon Revenue Share]", "[Low-Carbon Share Target]"],
-           categorical=True, sort="cat", colours={"[Low-Carbon Revenue Share]": GREEN, "[Low-Carbon Share Target]": LGREY},
+           categorical=True, sort="cat", colours={"[Low-Carbon Revenue Share]": GREEN, "[Low-Carbon Share Target]": LGREY}, hide_labels=["[Low-Carbon Share Target]"],
            extra={"lineStyles": [{"properties": {"lineStyle": lit("'dashed'")}, "selector": {"metadata": "_Measures.Low-Carbon Share Target"}}]})
 no_filter(pg, sl[:1], [ev, em, lc])
 
@@ -337,13 +348,16 @@ pg = P["pipeline"]
 header(pg, 5, [])
 kpis(pg, [("Pipeline Runs",), ("Rows Landed",), ("Rows Rejected",), ("Reject Rate",),
           ("DQ Checks Passed", "DQ Checks Failed", "failed", "DQ Failed Colour"), ("Last Run Duration",)])
-chart(pg, "barChart", *inner((TWO[0][0], ROW2_Y, TWO[0][1], ROW2_H)), "vw_pipeline_runs.object_name", ["[Rows Passed Validation]", "[Rows Rejected]"],
-      sort="desc", labels=False, value_axis=True, colours={"[Rows Passed Validation]": LGREY, "[Rows Rejected]": RED})
+table(pg, *inner((TWO[0][0], ROW2_Y, TWO[0][1], ROW2_H)),
+      ["vw_pipeline_runs.object_name", "vw_pipeline_runs.rows_read", "vw_pipeline_runs.rows_inserted", "vw_pipeline_runs.rows_updated",
+       "vw_pipeline_runs.rows_rejected", "vw_pipeline_runs.duration_seconds"],
+      ["Silver table", "Rows read", "Inserted", "Updated", "Rejected", "Seconds"], latest_entity="vw_pipeline_runs",
+      where=[("vw_pipeline_runs", "step", "'silver'")], font=12)
 chart(pg, "clusteredBarChart", *inner((TWO[1][0], ROW2_Y, TWO[1][1], ROW2_H)), "vw_rejections.reject_reason", ["[Rejected Rows (latest)]"],
       series="vw_rejections.table_name", sort="desc", labels=False, value_axis=True)
 table(pg, *inner((THREE[2][0], ROW3_Y, THREE[2][1], ROW3_H)),
-      ["vw_dq_results.check_name", "vw_dq_results.table_name", "vw_dq_results.expected_value", "vw_dq_results.actual_value", "vw_dq_results.result"],
-      ["Check", "Table", "Expected", "Actual", "Result"], latest_entity="vw_dq_results")
+      ["vw_dq_results.result", "vw_dq_results.check_name", "vw_dq_results.table_name", "vw_dq_results.actual_value"],
+      ["Result", "Check", "Table", "Actual"], latest_entity="vw_dq_results", font=10)
 
 # ------------------------------------------------------------------ write
 shutil.rmtree(OUT, ignore_errors=True)

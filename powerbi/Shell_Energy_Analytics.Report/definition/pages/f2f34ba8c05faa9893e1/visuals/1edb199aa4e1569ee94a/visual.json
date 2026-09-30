@@ -221,6 +221,21 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "valueDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Non-fuel Revenue ($m)",
+            "id": "field-b8e9f63a-0000-0000-0000-2f55a64e14f0"
+          }
         }
       ]
     },

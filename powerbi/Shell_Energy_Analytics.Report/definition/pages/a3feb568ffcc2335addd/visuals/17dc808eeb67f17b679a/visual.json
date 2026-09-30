@@ -251,6 +251,21 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "valueDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Scope 1+2 vs 2020",
+            "id": "field-a7e57591-0000-0000-0000-56a5052ceeb9"
+          }
         }
       ]
     },

@@ -78,7 +78,7 @@
             }
           ]
         },
-        "Size": {
+        "Tooltips": {
           "projections": [
             {
               "field": {
@@ -93,11 +93,7 @@
               },
               "queryRef": "_Measures.Fuel Volume ML",
               "nativeQueryRef": "Fuel Volume ML"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
+            },
             {
               "field": {
                 "Measure": {
@@ -161,6 +157,13 @@
       "bubbleLayer": [
         {
           "properties": {
+            "bubbleRadius": {
+              "expr": {
+                "Literal": {
+                  "Value": "4L"
+                }
+              }
+            },
             "bubbleStrokeWidth": {
               "expr": {
                 "Literal": {

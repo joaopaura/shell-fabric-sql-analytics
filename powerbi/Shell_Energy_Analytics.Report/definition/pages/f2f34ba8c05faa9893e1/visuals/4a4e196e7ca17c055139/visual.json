@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Fuel Volume ML"
+                  "Property": "Fuel Volume Top 10"
                 }
               },
-              "queryRef": "_Measures.Fuel Volume ML",
-              "nativeQueryRef": "Fuel Volume ML"
+              "queryRef": "_Measures.Fuel Volume Top 10",
+              "nativeQueryRef": "Fuel Volume Top 10"
             }
           ]
         },
@@ -79,7 +79,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Fuel Volume ML"
+                "Property": "Fuel Volume Top 10"
               }
             },
             "direction": "Descending"
@@ -128,7 +128,7 @@
             "position": {
               "expr": {
                 "Literal": {
-                  "Value": "'TopLeft'"
+                  "Value": "'Top'"
                 }
               }
             }
@@ -151,7 +151,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Fuel Volume ML"
+            "metadata": "_Measures.Fuel Volume Top 10"
           }
         }
       ]
